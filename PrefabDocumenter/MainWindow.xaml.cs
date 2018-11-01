@@ -21,6 +21,7 @@ using AngleSharp.Dom.Html;
 using AngleSharp.Html;
 using System.Text.RegularExpressions;
 using System.Collections.ObjectModel;
+using PrefabDocumenter.DB;
 
 namespace PrefabDocumenter
 {
@@ -29,10 +30,12 @@ namespace PrefabDocumenter
     /// </summary>
     public partial class MainWindow : Window
     {
-        const string xmlFilter = "XML(*.xml)|*.xml|全てのファイル (*.*)|*.*";
-        const string htmlFilter = "html(*.html)|*.html|全てのファイル (*.*)|*.*";
-        XElement loadFileTreeRootElement;
-        XElement loadDraftDocRootElement;
+        private const string xmlFilter = "XML(*.xml)|*.xml|全てのファイル (*.*)|*.*";
+        private const string htmlFilter = "html(*.html)|*.html|全てのファイル (*.*)|*.*";
+        private const string dbFilter = "db(*.db)|*.db|全てのファイル (*.*)|*.*";
+
+        private XElement loadFileTreeRootElement;
+        private XElement loadDraftDocRootElement;
 
         public MainWindow()
         {
@@ -172,7 +175,7 @@ namespace PrefabDocumenter
             }
         }
 
-        private async void CreateDocument(object sender, RoutedEventArgs e)
+        private async void CreateHtmlDocument(object sender, RoutedEventArgs e)
         {
             if(loadDraftDocRootElement == null || loadFileTreeRootElement == null)
             {
@@ -215,6 +218,25 @@ namespace PrefabDocumenter
 
                 toggleAllButtonEnabled(true);
             }
+        }
+
+        private async void CreateDbDocument(object sender, RoutedEventArgs e)
+        {
+            if (loadDraftDocRootElement == null || loadFileTreeRootElement == null)
+            {
+                MessageBox.Show("File tree xmlとDraft documentを読み込んでください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var path = FileDialog.SaveFileDialog(dbFilter);
+
+            if (path == "")
+            {
+                return;
+            }
+
+            var sqlProvider = new SqlDbProvider<IPrefabDocumentModel>(path);
+            sqlProvider.CreateTable();
         }
         //->
 

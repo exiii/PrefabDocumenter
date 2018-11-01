@@ -54,7 +54,7 @@
         <TextBox x:Name="HtmlTempPath" Height="23" Margin="10,28,43,0" VerticalAlignment="Top" Grid.Row="1" Grid.Column="1"/>
         <Button x:Name="HtmlTempPathInjectButton" Content="..." HorizontalAlignment="Right" Margin="0,27,14,0" VerticalAlignment="Top" Width="24" Height="24" Click="HtmlTempPathInject" Grid.Row="1" Grid.Column="1"/>
 
-        <Button Content="Create Document" HorizontalAlignment="Right" Margin="0,59,14,0" VerticalAlignment="Top" Width="153" Click="CreateDocument" Grid.Row="1" Grid.Column="1"></Button>
+        <Button Content="Create Document" HorizontalAlignment="Right" Margin="0,59,14,0" VerticalAlignment="Top" Width="153" Click="CreateDbDocument" Grid.Row="1" Grid.Column="1"></Button>
     </Grid>
 
 </Window>

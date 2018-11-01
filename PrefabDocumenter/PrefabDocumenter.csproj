@@ -74,6 +74,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DB\PrefabDocumentModel.cs" />
+    <Compile Include="DB\interface\IModel.cs" />
+    <Compile Include="DB\interface\IPrefabDocumentModel.cs" />
+    <Compile Include="DB\SqlDbProvider.cs" />
     <Compile Include="HTML\Document.cs" />
     <Compile Include="HTML\Template.cs" />
     <Compile Include="MetaFile\SreachMetaFile.cs" />
@@ -118,7 +122,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
