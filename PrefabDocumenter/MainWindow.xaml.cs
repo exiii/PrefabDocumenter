@@ -39,6 +39,7 @@ namespace PrefabDocumenter
             InitializeComponent();
         }
 
+        //<-MainWindow.xaml call functions
         private void TargetFolderPathInject(object sender, RoutedEventArgs e)
         {
             TargetFolderPath.Text = FileDialog.OpenFolderDialog();
@@ -137,20 +138,6 @@ namespace PrefabDocumenter
             toggleAllButtonEnabled(true);
         }
 
-        private void updateMetaFileTree(XDocument xDoc)
-        {
-            metaFileTree.Items.Refresh();
-            metaFileTree.ItemsSource = xDoc.Root.Elements();
-            loadFileTreeRootElement = xDoc.Root;
-        }
-
-        private void updateDraftDocTree(XDocument xDoc)
-        {
-            draftTreeView.Items.Refresh();
-            draftTreeView.ItemsSource = xDoc.Root.Elements();
-            loadDraftDocRootElement = xDoc.Root;
-        }
-
         private async void CreateDraftDocument(object sender, RoutedEventArgs e)
         {
             if (loadFileTreeRootElement == null)
@@ -229,17 +216,29 @@ namespace PrefabDocumenter
                 toggleAllButtonEnabled(true);
             }
         }
+        //->
+
+        private void updateMetaFileTree(XDocument xDoc)
+        {
+            metaFileTree.Items.Refresh();
+            metaFileTree.ItemsSource = xDoc.Root.Elements();
+            loadFileTreeRootElement = xDoc.Root;
+        }
+
+        private void updateDraftDocTree(XDocument xDoc)
+        {
+            draftTreeView.Items.Refresh();
+            draftTreeView.ItemsSource = xDoc.Root.Elements();
+            loadDraftDocRootElement = xDoc.Root;
+        }
 
         private void toggleAllButtonEnabled(bool isEnabled)
         {
             var buttons = MainGrid.Children.OfType<Button>();
 
-            Console.WriteLine("through");
-
             foreach (var button in buttons)
             {
                 button.IsEnabled = isEnabled;
-                Console.WriteLine(button.Name);
             }
         }
     }
