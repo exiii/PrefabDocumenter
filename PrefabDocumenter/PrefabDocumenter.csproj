@@ -77,12 +77,13 @@
     <Compile Include="DB\Model\PrefabDocumentModel.cs" />
     <Compile Include="DB\Model\interface\IModel.cs" />
     <Compile Include="DB\SqlDbProvider.cs" />
-    <Compile Include="HTML\Document.cs" />
-    <Compile Include="HTML\Template.cs" />
+    <Compile Include="HTML\HtmlDocument.cs" />
+    <Compile Include="HTML\HtmlTemplate.cs" />
     <Compile Include="MetaFile\SreachMetaFile.cs" />
     <Compile Include="MetaFile\UnityMetaParser.cs" />
     <Compile Include="XML\FileTreeXml.cs" />
-    <Compile Include="XML\XMLTags.cs" />
+    <Compile Include="XML\XmlDocument.cs" />
+    <Compile Include="XML\XmlTags.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

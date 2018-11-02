@@ -174,6 +174,37 @@ namespace PrefabDocumenter
                 MessageBox.Show("File tree xmlを読み込んでください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
+
+            var path = FileDialog.OpenFileDialog(xmlFilter);
+
+            if (File.Exists(path) == false)
+            {
+                MessageBox.Show("正しいファイルを選択してください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            toggleAllButtonEnabled(false);
+
+            var xDoc = new XDocument();
+            await Task.Run(() => {
+                xDoc = XDocument.Load(path);
+            });
+
+            xDoc = await XmlDocument.UpdateDraftDocument(loadFileTreeRootElement.Elements(), xDoc.Elements());
+
+            using (var fs = new FileStream(path, FileMode.Create))
+            {
+                await Task.Run(() => {
+                    xDoc.Save(fs);
+                });
+
+                fs.Close();
+                fs.Dispose();
+            }
+
+            updateDraftDocTree(xDoc);
+
+            toggleAllButtonEnabled(true);
         }
 
         private async void CreateDbDocument(object sender, RoutedEventArgs e)
