@@ -194,62 +194,6 @@ namespace PrefabDocumenter
             sqlProvider.Inserts(models);
         }
 
-        //Export HTML
-        /*
-        private void HtmlTempPathInject(object sender, RoutedEventArgs e)
-        {
-            HtmlTempPath.Text = FileDialog.OpenFileDialog(htmlFilter);
-        }
-        
-
-        private async void CreateHtmlDocument(object sender, RoutedEventArgs e)
-        {
-            if (loadDraftDocRootElement == null || loadFileTreeRootElement == null)
-            {
-                MessageBox.Show("File tree xmlとDraft documentを読み込んでください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            if (!File.Exists(HtmlTempPath.Text))
-            {
-                MessageBox.Show("Html Template Pathに正しいファイルパスを指定してください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            var path = FileDialog.SaveFileDialog(htmlFilter);
-
-            if (path == "")
-            {
-                return;
-            }
-
-
-            using (var sw = new StringWriter())
-            {
-                toggleAllButtonEnabled(false);
-
-                var Doc = new Document(new StreamReader(HtmlTempPath.Text));
-
-                var htmlDocument = await Doc.CreateDocument(loadDraftDocRootElement, loadFileTreeRootElement);
-
-                var formatter = new PrettyMarkupFormatter();
-
-                htmlDocument.ToHtml(sw, formatter);
-
-                var streamWriter = File.CreateText(path);
-
-                await Task.Run(() => {
-                    streamWriter.Write(sw.ToString());
-                    streamWriter.Close();
-                });
-
-                toggleAllButtonEnabled(true);
-            }
-        }
-        */
-
-        //->
-
         private void updateMetaFileTree(XDocument xDoc)
         {
             metaFileTree.Items.Refresh();
