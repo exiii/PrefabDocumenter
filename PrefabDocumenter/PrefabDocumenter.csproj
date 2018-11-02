@@ -74,9 +74,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="DB\PrefabDocumentModel.cs" />
-    <Compile Include="DB\interface\IModel.cs" />
-    <Compile Include="DB\interface\IPrefabDocumentModel.cs" />
+    <Compile Include="DB\Model\PrefabDocumentModel.cs" />
+    <Compile Include="DB\Model\interface\IModel.cs" />
     <Compile Include="DB\SqlDbProvider.cs" />
     <Compile Include="HTML\Document.cs" />
     <Compile Include="HTML\Template.cs" />

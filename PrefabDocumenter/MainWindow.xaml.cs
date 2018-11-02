@@ -48,11 +48,6 @@ namespace PrefabDocumenter
             TargetFolderPath.Text = FileDialog.OpenFolderDialog();
         }
 
-        private void HtmlTempPathInject(object sender, RoutedEventArgs e)
-        {
-            HtmlTempPath.Text = FileDialog.OpenFileDialog(htmlFilter);
-        }
-
         private async void CreateTreeFile(object sender, RoutedEventArgs e)
         {
             if (Directory.Exists(TargetFolderPath.Text) == false)
@@ -175,9 +170,41 @@ namespace PrefabDocumenter
             }
         }
 
+        private async void CreateDbDocument(object sender, RoutedEventArgs e)
+        {
+            if (loadDraftDocRootElement == null || loadFileTreeRootElement == null)
+            {
+                MessageBox.Show("File tree xmlとDraft documentを読み込んでください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var path = FileDialog.SaveFileDialog(dbFilter);
+
+            if (path == "")
+            {
+                return;
+            }
+
+            var sqlProvider = new SqlDbProvider<PrefabDocumentModel>(path);
+
+            var models = await PrefabDocumentModel.CreateXmlToModel(loadDraftDocRootElement, loadFileTreeRootElement);
+
+            sqlProvider.InitTable();
+
+            sqlProvider.Inserts(models);
+        }
+
+        //Export HTML
+        /*
+        private void HtmlTempPathInject(object sender, RoutedEventArgs e)
+        {
+            HtmlTempPath.Text = FileDialog.OpenFileDialog(htmlFilter);
+        }
+        
+
         private async void CreateHtmlDocument(object sender, RoutedEventArgs e)
         {
-            if(loadDraftDocRootElement == null || loadFileTreeRootElement == null)
+            if (loadDraftDocRootElement == null || loadFileTreeRootElement == null)
             {
                 MessageBox.Show("File tree xmlとDraft documentを読み込んでください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -219,25 +246,8 @@ namespace PrefabDocumenter
                 toggleAllButtonEnabled(true);
             }
         }
+        */
 
-        private async void CreateDbDocument(object sender, RoutedEventArgs e)
-        {
-            if (loadDraftDocRootElement == null || loadFileTreeRootElement == null)
-            {
-                MessageBox.Show("File tree xmlとDraft documentを読み込んでください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            var path = FileDialog.SaveFileDialog(dbFilter);
-
-            if (path == "")
-            {
-                return;
-            }
-
-            var sqlProvider = new SqlDbProvider<IPrefabDocumentModel>(path);
-            sqlProvider.CreateTable();
-        }
         //->
 
         private void updateMetaFileTree(XDocument xDoc)

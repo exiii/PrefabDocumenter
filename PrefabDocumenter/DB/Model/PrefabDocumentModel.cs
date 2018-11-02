@@ -8,27 +8,22 @@ using System.Xml.Linq;
 
 namespace PrefabDocumenter.DB
 {
-    class PrefabDocumentModel : IPrefabDocumentModel
+    class PrefabDocumentModel : IModel
     {
-        public static string CreateTableCommand
-        {
-            get
-            {
-                return $@"CREATE TABLE IF NOT EXISTS Document(" +
-                        "guid TEXT PRIMARY KEY NOT NULL, " +
-                        "filename TEXT NOT NULL, " +
-                        "filepath TEXT NOT NULL, " +
-                        "description TEXT NOT NULL);";
-            } 
-        }
+        public const string CreateTableCommand = "CREATE TABLE IF NOT EXISTS Document(" +
+                                                  "guid TEXT PRIMARY KEY NOT NULL, " +
+                                                  "filename TEXT NOT NULL, " +
+                                                  "filepath TEXT NOT NULL, " +
+                                                  "description TEXT);";
+
+        public const string DropTableCommand = "DROP TABLE IF EXISTS Document;";
 
         public string InsertCommand
         {
             get
             {
-                return "INSERT INTO " +
-                       $@"{TableName}(guid, filename, filepath, description) " +
-                       $@"VALUES({Guid}, {FileName}, {FilePath}, {Description});";
+                return $@"INSERT INTO {TableName} " +
+                       $@"VALUES('{Guid}', '{@FileName}', '{@FilePath}', '{@Description}');";
             }
         }
 
@@ -40,16 +35,7 @@ namespace PrefabDocumenter.DB
 
         public string Description { get; }
 
-        public string TableName
-        {
-            get
-            {
-                return "Document";
-            }
-        }
-
-        //public const string TableName = "Documnet";
-
+        public const string TableName = "Document";
 
         public PrefabDocumentModel(string guid, string fileName, string filePath, string description)
         {
@@ -60,6 +46,26 @@ namespace PrefabDocumenter.DB
         }
 
         //<- static method
+        static PrefabDocumentModel()
+        {
+            SqlDbProvider<PrefabDocumentModel>.DropTableCommnad = DropTableCommand;
+            SqlDbProvider<PrefabDocumentModel>.CreateTableCommand = CreateTableCommand;
+        }
+
+        public static async Task<List<PrefabDocumentModel>> CreateXmlToModel(XElement draftRootElement, XElement metaFileElementRoot)
+        {
+            return await CreateXmlToModel(draftRootElement.Elements(), metaFileElementRoot.Elements());
+        }
+
+        public static async Task<List<PrefabDocumentModel>> CreateXmlToModel(IEnumerable<XElement> draftElements, XElement metaFileRootElement)
+        {
+            return await CreateXmlToModel(draftElements, metaFileRootElement.Elements());
+        }
+
+        public static async Task<List<PrefabDocumentModel>> CreateXmlToModel(XElement draftRootElement, IEnumerable<XElement> metaFileElements)
+        {
+            return await CreateXmlToModel(draftRootElement.Elements(), metaFileElements);
+        }
 
         public static async Task<List<PrefabDocumentModel>> CreateXmlToModel(IEnumerable<XElement> draftElements, IEnumerable<XElement> metaFileElements)
         {
@@ -80,9 +86,9 @@ namespace PrefabDocumenter.DB
                                     .ForEach(element =>
                                     {
                                         string guid = element.Attribute(XMLTags.guidAttrTag).Value;
-                                        string fileName = element.Attribute(XMLTags.fileNameAttrTag).Value;
+                                        string fileName = descriptionElement.Attribute(XMLTags.fileNameAttrTag).Value;
                                         string filePath = element.Attribute(XMLTags.filePathAttrTag).Value;
-                                        string description = element.Attribute(XMLTags.descriptionTag).Value;
+                                        string description = descriptionElement.Descendants(XMLTags.descriptionTag).First().Value;
 
                                         documentModels.Add(new PrefabDocumentModel(guid, fileName, filePath, description));
                                     });

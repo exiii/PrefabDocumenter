@@ -15,7 +15,8 @@ namespace PrefabDocumenter.DB
         private SQLiteConnectionStringBuilder sqlConnSB;
         private SQLiteConnection dbConnecter;
 
-        private const string CREATE_TABLE_COMMAND = "CreateTableCommand";
+        public static string DropTableCommnad;
+        public static string CreateTableCommand;
 
         public SqlDbProvider(string dbFilePath)
         {
@@ -26,25 +27,15 @@ namespace PrefabDocumenter.DB
             dbConnecter.Open();
         }
 
-        public void CreateTable()
+        public void InitTable()
         {
-            var subTypes = Assembly.GetAssembly(typeof(T))
-                                   .GetTypes()
-                                   .Where(t => {
-                                       return typeof(T).IsAssignableFrom(t) && !t.IsAbstract;
-                                   });
-
             using (var cmd = new SQLiteCommand(dbConnecter))
             {
-                foreach (var type in subTypes)
-                {
-                    Console.WriteLine(type);
-                    Console.WriteLine(type.GetProperties(BindingFlags.Static).Where(x => x.PropertyType == typeof(string)).First().GetValue(type, null) as string);
-                    cmd.CommandText = type.GetProperty(CREATE_TABLE_COMMAND, BindingFlags.Static).GetValue(type) as string;
-                    //[TODO]
+                cmd.CommandText = DropTableCommnad;
+                cmd.ExecuteNonQuery();
 
-                    cmd.ExecuteNonQuery();
-                }
+                cmd.CommandText = CreateTableCommand;
+                cmd.ExecuteNonQuery();
             }
         }
 
@@ -53,6 +44,8 @@ namespace PrefabDocumenter.DB
             using (var cmd = new SQLiteCommand(dbConnecter))
             {
                 cmd.CommandText = model.InsertCommand;
+
+                cmd.ExecuteNonQuery();
             }
         }
 
@@ -63,7 +56,8 @@ namespace PrefabDocumenter.DB
                 foreach (var model in models)
                 {
                     cmd.CommandText = model.InsertCommand;
-                    
+
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
