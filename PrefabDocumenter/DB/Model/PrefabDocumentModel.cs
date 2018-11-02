@@ -1,12 +1,11 @@
-﻿using PrefabDocumenter.XML;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace PrefabDocumenter.DB
+namespace PrefabDocumenter
 {
     class PrefabDocumentModel : IModel
     {
@@ -48,7 +47,7 @@ namespace PrefabDocumenter.DB
         //<- static method
         static PrefabDocumentModel()
         {
-            SqlDbProvider<PrefabDocumentModel>.DropTableCommnad = DropTableCommand;
+            SqlDbProvider<PrefabDocumentModel>.DropTableCommand = DropTableCommand;
             SqlDbProvider<PrefabDocumentModel>.CreateTableCommand = CreateTableCommand;
         }
 
@@ -73,22 +72,22 @@ namespace PrefabDocumenter.DB
 
             await Task.Run(() => 
             {
-                var enableDrafts = draftElements.DescendantsAndSelf(XMLTags.metaFileTag)
-                                                .Where(element => element.Elements(XMLTags.metaFileTag) != null)
-                                                .Where(element => element.Descendants(XMLTags.descriptionTag).First().Value != "");
+                var enableDrafts = draftElements.DescendantsAndSelf(XmlTags.metaFileTag)
+                                                .Where(element => element.Elements(XmlTags.metaFileTag) != null)
+                                                .Where(element => element.Descendants(XmlTags.descriptionTag).First().Value != "");
 
                 foreach (var descriptionElement in enableDrafts)
                 {
                     metaFileElements.DescendantsAndSelf()
-                                    .Where(metaElement => metaElement.Attribute(XMLTags.guidAttrTag) != null)
-                                    .Where(metaElement => metaElement.Attribute(XMLTags.guidAttrTag).Value == descriptionElement.Attribute(XMLTags.guidAttrTag).Value)
+                                    .Where(metaElement => metaElement.Attribute(XmlTags.guidAttrTag) != null)
+                                    .Where(metaElement => metaElement.Attribute(XmlTags.guidAttrTag).Value == descriptionElement.Attribute(XmlTags.guidAttrTag).Value)
                                     .ToList()
                                     .ForEach(element =>
                                     {
-                                        string guid = element.Attribute(XMLTags.guidAttrTag).Value;
-                                        string fileName = descriptionElement.Attribute(XMLTags.fileNameAttrTag).Value;
-                                        string filePath = element.Attribute(XMLTags.filePathAttrTag).Value;
-                                        string description = descriptionElement.Descendants(XMLTags.descriptionTag).First().Value;
+                                        string guid = element.Attribute(XmlTags.guidAttrTag).Value;
+                                        string fileName = descriptionElement.Attribute(XmlTags.fileNameAttrTag).Value;
+                                        string filePath = element.Attribute(XmlTags.filePathAttrTag).Value;
+                                        string description = descriptionElement.Descendants(XmlTags.descriptionTag).First().Value;
 
                                         documentModels.Add(new PrefabDocumentModel(guid, fileName, filePath, description));
                                     });

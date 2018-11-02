@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace PrefabDocumenter.HTML
+namespace PrefabDocumenter
 {
     class HtmlTemplate
     {

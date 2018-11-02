@@ -1,4 +1,4 @@
-﻿namespace PrefabDocumenter.DB
+﻿namespace PrefabDocumenter
 {
     public interface IModel
     {

@@ -7,7 +7,7 @@ using System.Xml.Linq;
 using System.Data.SQLite;
 using System.Reflection;
 
-namespace PrefabDocumenter.DB
+namespace PrefabDocumenter
 {
     public class SqlDbProvider<T> where T : IModel
     {
@@ -15,7 +15,7 @@ namespace PrefabDocumenter.DB
         private SQLiteConnectionStringBuilder sqlConnSB;
         private SQLiteConnection dbConnecter;
 
-        public static string DropTableCommnad;
+        public static string DropTableCommand;
         public static string CreateTableCommand;
 
         public SqlDbProvider(string dbFilePath)
@@ -31,7 +31,7 @@ namespace PrefabDocumenter.DB
         {
             using (var cmd = new SQLiteCommand(dbConnecter))
             {
-                cmd.CommandText = DropTableCommnad;
+                cmd.CommandText = DropTableCommand;
                 cmd.ExecuteNonQuery();
 
                 cmd.CommandText = CreateTableCommand;

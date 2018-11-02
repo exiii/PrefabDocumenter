@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 
-namespace PrefabDocumenter.MetaFile
+namespace PrefabDocumenter
 {
     static class Searcher
     {

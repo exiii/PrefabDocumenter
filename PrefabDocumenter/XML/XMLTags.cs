@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PrefabDocumenter.XML
+namespace PrefabDocumenter
 {
-    public static class XMLTags
+    public static class XmlTags
     {
         public const string filePathAttrTag = "FilePath";
         public const string fileNameAttrTag = "FileName";

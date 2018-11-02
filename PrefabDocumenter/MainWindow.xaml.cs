@@ -15,13 +15,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using exiii;
-using PrefabDocumenter.XML;
-using PrefabDocumenter.HTML;
 using AngleSharp.Dom.Html;
 using AngleSharp.Html;
 using System.Text.RegularExpressions;
 using System.Collections.ObjectModel;
-using PrefabDocumenter.DB;
 
 namespace PrefabDocumenter
 {
@@ -155,7 +152,7 @@ namespace PrefabDocumenter
             {
                 toggleAllButtonEnabled(false);
 
-                var xDoc = await Document.CreateDraftDocument(loadFileTreeRootElement.DescendantsAndSelf().Where(element => element.Attribute("Guid") != null));
+                var xDoc = await XmlDocument.CreateDraftDocument(loadFileTreeRootElement.DescendantsAndSelf().Where(element => element.Attribute("Guid") != null));
 
                 await Task.Run(() => {
                     xDoc.Save(fs);
@@ -167,6 +164,15 @@ namespace PrefabDocumenter
                 updateDraftDocTree(xDoc);
 
                 toggleAllButtonEnabled(true);
+            }
+        }
+
+        private async void UpdateDraftDocument(object sender, RoutedEventArgs e)
+        {
+            if (loadFileTreeRootElement == null)
+            {
+                MessageBox.Show("File tree xmlを読み込んでください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
             }
         }
 

@@ -8,10 +8,9 @@ using System.Xml.Linq;
 using AngleSharp.Parser.Html;
 using AngleSharp.Dom;
 using AngleSharp.Dom.Html;
-using PrefabDocumenter.XML;
 using System.IO;
 
-namespace PrefabDocumenter.HTML
+namespace PrefabDocumenter
 {
     public class Document
     {
@@ -35,27 +34,6 @@ namespace PrefabDocumenter.HTML
             htmlTemplate = new HtmlTemplate(sr);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="metaFileElement"></param>
-        /// <returns></returns>
-        public static async Task<XDocument> CreateDraftDocument(IEnumerable<XElement> metaFileElement)
-        {
-            var documentDraft = new XElement(XMLTags.metaFilesTag);
-
-            await Task.Run(() => {
-                foreach (var element in metaFileElement)
-                {
-                    documentDraft.Add(new XElement(XMLTags.metaFileTag,
-                        new XAttribute(XMLTags.fileNameAttrTag, Regex.Split(element.Attribute(XMLTags.filePathAttrTag).Value.ToString(), @"\\").Last()),
-                        new XAttribute(XMLTags.guidAttrTag, element.Attribute(XMLTags.guidAttrTag).Value),
-                        new XElement(XMLTags.descriptionTag)));
-                }
-            });
-
-            return new XDocument(new XDeclaration("1.0", "utf-8", null), documentDraft);
-        }
 
         public async Task<IHtmlDocument> CreateDocument(XElement draftRootElement, XElement metaFileElementRoot)
         {
@@ -75,9 +53,9 @@ namespace PrefabDocumenter.HTML
 
         public async Task<IHtmlDocument> CreateDocument(IEnumerable<XElement> draftElements, IEnumerable<XElement> metaFileElements)
         {
-            var enableDrafts = draftElements.DescendantsAndSelf(XMLTags.metaFileTag)
-                .Where(element => element.Elements(XMLTags.metaFileTag) != null)
-                .Where(element => element.Descendants(XMLTags.descriptionTag).First().Value != "");
+            var enableDrafts = draftElements.DescendantsAndSelf(XmlTags.metaFileTag)
+                .Where(element => element.Elements(XmlTags.metaFileTag) != null)
+                .Where(element => element.Descendants(XmlTags.descriptionTag).First().Value != "");
 
             var parser = new HtmlParser();
             var document = parser.Parse(htmlTemplate.Content);
@@ -86,26 +64,26 @@ namespace PrefabDocumenter.HTML
                 foreach (var descriptionElement in enableDrafts)
                 {
                     metaFileElements.DescendantsAndSelf()
-                        .Where(metaElement => metaElement.Attribute(XMLTags.guidAttrTag) != null)
-                        .Where(metaElement => metaElement.Attribute(XMLTags.guidAttrTag).Value == descriptionElement.Attribute(XMLTags.guidAttrTag).Value)
+                        .Where(metaElement => metaElement.Attribute(XmlTags.guidAttrTag) != null)
+                        .Where(metaElement => metaElement.Attribute(XmlTags.guidAttrTag).Value == descriptionElement.Attribute(XmlTags.guidAttrTag).Value)
                         .ToList()
                         .ForEach(element => {
                             var htmlElements = new List<IElement>();
 
                             var h2 = document.CreateElement("h2");
-                            h2.TextContent = Regex.Replace(descriptionElement.Attribute(XMLTags.fileNameAttrTag).Value, @".meta$", "");
+                            h2.TextContent = Regex.Replace(descriptionElement.Attribute(XmlTags.fileNameAttrTag).Value, @".meta$", "");
                             htmlElements.Add(h2);
 
                             var pathPTag = document.CreateElement("p");
-                            pathPTag.TextContent = "Path: " + Regex.Replace(element.Attribute(XMLTags.filePathAttrTag).Value, @".meta$", "");
+                            pathPTag.TextContent = "Path: " + Regex.Replace(element.Attribute(XmlTags.filePathAttrTag).Value, @".meta$", "");
                             htmlElements.Add(pathPTag);
 
                             var guidPTag = document.CreateElement("p");
-                            guidPTag.TextContent = "Guid: " + element.Attribute(XMLTags.guidAttrTag).Value;
+                            guidPTag.TextContent = "Guid: " + element.Attribute(XmlTags.guidAttrTag).Value;
                             htmlElements.Add(guidPTag);
 
                             var descriptionPTag = document.CreateElement("p");
-                            descriptionPTag.TextContent = descriptionElement.Descendants(XMLTags.descriptionTag).First().Value;
+                            descriptionPTag.TextContent = descriptionElement.Descendants(XmlTags.descriptionTag).First().Value;
                             htmlElements.Add(descriptionPTag);
 
                             htmlElements.ForEach(htmlElement => document.Body.AppendChild(htmlElement));                        

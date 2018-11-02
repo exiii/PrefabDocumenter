@@ -1,5 +1,4 @@
 ﻿using exiii;
-using PrefabDocumenter.MetaFile;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace PrefabDocumenter.XML
+namespace PrefabDocumenter
 {
     public static class FileTreeXml
     {
@@ -21,7 +20,7 @@ namespace PrefabDocumenter.XML
         /// <param name="FolderPath"></param>
         public static async Task<XDocument> CreateXElement(string FolderPath)
         {
-            var metaFileTreeXml = new XElement(XMLTags.metaFilesTag, new XAttribute(XMLTags.selectFolderPathAttrTag, FolderPath));
+            var metaFileTreeXml = new XElement(XmlTags.metaFilesTag, new XAttribute(XmlTags.selectFolderPathAttrTag, FolderPath));
             await Task.Run(() => {
                 foreach (var path in Searcher.Search(FolderPath))
                 {
@@ -37,8 +36,8 @@ namespace PrefabDocumenter.XML
                         {
                             beforeElement.Add(new XElement(replaceName,
                                 Regex.IsMatch(fileName, ":") ? new XAttribute("Drive", true) : null,
-                                Regex.IsMatch(fileName, targetFileExtension) ? new XAttribute(XMLTags.filePathAttrTag, relativePath) : null,
-                                Regex.IsMatch(fileName, targetFileExtension) ? new XAttribute(XMLTags.guidAttrTag, UnityMetaParser.Parse(new StreamReader(path).ReadToEnd()).Guid) : null
+                                Regex.IsMatch(fileName, targetFileExtension) ? new XAttribute(XmlTags.filePathAttrTag, relativePath) : null,
+                                Regex.IsMatch(fileName, targetFileExtension) ? new XAttribute(XmlTags.guidAttrTag, UnityMetaParser.Parse(new StreamReader(path).ReadToEnd()).Guid) : null
                                 ));
                         }
 
