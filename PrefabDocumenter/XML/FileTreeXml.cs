@@ -51,8 +51,6 @@ namespace PrefabDocumenter
                         //Console.WriteLine(fileName);
                         if (beforeElement.DescendantsAndSelf().Attributes(XmlTags.fileNameAttrTag).Where(name => name.Value == fileName).Any() == false)
                         {
-                            Console.WriteLine(fileName);
-
                             beforeElement.Add(new XElement("File",
                                 new XAttribute(XmlTags.fileNameAttrTag, fileName),
                                 //Regex.IsMatch(fileName, ":") ? new XAttribute("Drive", true) : null,
