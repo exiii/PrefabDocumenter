@@ -37,20 +37,24 @@ namespace PrefabDocumenter
         {
             var newDraftDocument = new XElement(XmlTags.metaFilesTag);
 
+            metaFileElement = metaFileElement.DescendantsAndSelf()
+                                             .Where(element => element.Attribute(XmlTags.guidAttrTag) != null);
+
             await Task.Run(() =>
             {
 
                 foreach (var metaElement in metaFileElement)
                 {
                     draftDocumentElement.DescendantsAndSelf()
+                                        .Where(draftElement => draftElement.Attribute(XmlTags.guidAttrTag) != null)
                                         .Where(draftElement => draftElement.Attribute(XmlTags.guidAttrTag).Value == metaElement.Attribute(XmlTags.guidAttrTag).Value)
                                         .ToList()
-                                        .ForEach(draftElement => newDraftDocument.Add(draftDocumentElement));
+                                        .ForEach(draftElement => newDraftDocument.Add(draftElement));
 
                     var Exist = draftDocumentElement.DescendantsAndSelf()
-                                                    .Where(draftElement => draftElement.Attribute(XmlTags.guidAttrTag).Value != metaElement.Attribute(XmlTags.guidAttrTag).Value)
+                                                    .Where(draftElement => draftElement.Attribute(XmlTags.guidAttrTag) != null)
+                                                    .Where(draftElement => draftElement.Attribute(XmlTags.guidAttrTag).Value == metaElement.Attribute(XmlTags.guidAttrTag).Value)
                                                     .Any();
-
                     if (!Exist)
                     {
                         newDraftDocument.Add(new XElement(XmlTags.metaFileTag,
