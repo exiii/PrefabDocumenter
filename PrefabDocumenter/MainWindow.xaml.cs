@@ -42,7 +42,8 @@ namespace PrefabDocumenter
         //<-MainWindow.xaml call functions
         private void TargetFolderPathInject(object sender, RoutedEventArgs e)
         {
-            TargetFolderPath.Text = FileDialog.OpenFolderDialog();
+            FileDialog.OpenFolderDialog(out var path);
+            TargetFolderPath.Text = path;
         }
 
         private async void CreateTreeFile(object sender, RoutedEventArgs e)
@@ -64,7 +65,7 @@ namespace PrefabDocumenter
             {
                 toggleAllButtonEnabled(false);
 
-                var xDoc = await FileTreeXml.CreateXElement(TargetFolderPath.Text);
+                var xDoc = await FileTreeXml.CreateXElement(TargetFolderPath.Text, FileNameRegex.Text);
 
                 await Task.Run(() => {
                     xDoc.Save(fs);
@@ -279,17 +280,19 @@ namespace PrefabDocumenter
             return true;
         }
 
-        internal static string OpenFolderDialog()
+        internal static bool OpenFolderDialog(out string FileName)
         {
             var dialog = new Microsoft.WindowsAPICodePack.Dialogs.CommonOpenFileDialog("保存フォルダ選択");
             dialog.IsFolderPicker = true;
 
             if (dialog.ShowDialog() != Microsoft.WindowsAPICodePack.Dialogs.CommonFileDialogResult.Ok)
             {
-                return "";
+                FileName = "";
+                return false;
             }
 
-            return dialog.FileName;
+            FileName = dialog.FileName;
+            return true;
         }
     }
 }

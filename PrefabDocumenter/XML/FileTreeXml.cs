@@ -18,11 +18,11 @@ namespace PrefabDocumenter
         /// 
         /// </summary>
         /// <param name="FolderPath"></param>
-        public static async Task<XDocument> CreateXElement(string FolderPath)
+        public static async Task<XDocument> CreateXElement(string FolderPath, string FileNameFilterRegex = "")
         {
             var metaFileTreeXml = new XElement(XmlTags.metaFilesTag, new XAttribute(XmlTags.selectFolderPathAttrTag, FolderPath));
             await Task.Run(() => {
-                foreach (var path in Searcher.Search(FolderPath))
+                foreach (var path in Searcher.Search(FolderPath, FileNameFilterRegex))
                 {
                     var relativePath = Regex.Replace(path, Regex.Escape(FolderPath), "");
 
