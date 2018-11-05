@@ -53,10 +53,10 @@ namespace PrefabDocumenter
                 return;
             }
 
-            var path = FileDialog.SaveFileDialog(xmlFilter);
-
-            if(path == "")
+            var result = FileDialog.SaveFileDialog(xmlFilter, out var path);
+            if (!result)
             {
+                MessageBox.Show("正しいパスを入力してください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -81,16 +81,10 @@ namespace PrefabDocumenter
         private async void LoadXmlFile(object sender, RoutedEventArgs e)
         {
 
-            var path = FileDialog.OpenFileDialog(xmlFilter);
-
-            if(path == "")
+            var result = FileDialog.OpenFileDialog(xmlFilter, out var path);
+            if (!result)
             {
-                return;
-            }
-
-            if (File.Exists(path) == false)
-            {
-                MessageBox.Show("正しいファイルを選択してください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("正しいファイルを入力してください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -108,16 +102,10 @@ namespace PrefabDocumenter
 
         private async void LoadDraftDocument(object sender, RoutedEventArgs e)
         {
-            var path = FileDialog.OpenFileDialog(xmlFilter);
-
-            if (path == "")
+            var result = FileDialog.OpenFileDialog(xmlFilter, out var path);
+            if (!result)
             {
-                return;
-            }
-
-            if (File.Exists(path) == false)
-            {
-                MessageBox.Show("正しいファイルを選択してください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("正しいファイルを入力してください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -141,10 +129,10 @@ namespace PrefabDocumenter
                 return;
             }
 
-            var path = FileDialog.SaveFileDialog(xmlFilter);
-
-            if (path == "")
+            var result = FileDialog.SaveFileDialog(xmlFilter, out var path);
+            if (!result)
             {
+                MessageBox.Show("正しいパスを入力してください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -175,9 +163,8 @@ namespace PrefabDocumenter
                 return;
             }
 
-            var path = FileDialog.OpenFileDialog(xmlFilter);
-
-            if (File.Exists(path) == false)
+            var result = FileDialog.OpenFileDialog(xmlFilter, out var path);
+            if (!result)
             {
                 MessageBox.Show("正しいファイルを選択してください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -215,10 +202,10 @@ namespace PrefabDocumenter
                 return;
             }
 
-            var path = FileDialog.SaveFileDialog(dbFilter);
-
-            if (path == "")
+            var result = FileDialog.SaveFileDialog(dbFilter, out var path);
+            if (!result)
             {
+                MessageBox.Show("正しいパスを入力してください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -258,32 +245,38 @@ namespace PrefabDocumenter
 
     internal static class FileDialog
     {
-        internal static string OpenFileDialog(string filter)
+        internal static bool OpenFileDialog(string filter, out string FileName)
         {
             var dialog = new Microsoft.Win32.OpenFileDialog();
 
             dialog.Filter = filter;
+            dialog.CheckFileExists = true;
 
             if (dialog.ShowDialog() == false)
             {
-                return "";
+                FileName = "";
+                return false;
             }
 
-            return dialog.FileName;
+            FileName = dialog.FileName;
+            return true;
         }
 
-        internal static string SaveFileDialog(string filter)
+        internal static bool SaveFileDialog(string filter, out string FileName)
         {
             var dialog = new Microsoft.Win32.SaveFileDialog();
 
             dialog.Filter = filter;
+            dialog.CheckPathExists = true;
 
             if (dialog.ShowDialog() == false)
             {
-                return "";
+                FileName = "";
+                return false;
             }
 
-            return dialog.FileName;
+            FileName = dialog.FileName;
+            return true;
         }
 
         internal static string OpenFolderDialog()
