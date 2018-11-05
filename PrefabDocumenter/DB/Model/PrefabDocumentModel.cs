@@ -40,7 +40,7 @@ namespace PrefabDocumenter
         {
             Guid = guid;
             FileName = fileName;
-            FilePath = fileName;
+            FilePath = filePath;
             Description = description;
         }
 
