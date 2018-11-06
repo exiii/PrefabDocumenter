@@ -72,25 +72,29 @@ namespace PrefabDocumenter
 
             await Task.Run(() => 
             {
-                var enableDrafts = draftElements.DescendantsAndSelf(XmlTags.metaFileTag)
-                                                .Where(element => element.Elements(XmlTags.metaFileTag) != null)
-                                                .Where(element => element.Descendants(XmlTags.descriptionTag).First().Value != "");
+                try {
+                    var enableDrafts = draftElements.DescendantsAndSelf(XmlTags.metaFileTag)
+                                                    .Where(element => element.Elements(XmlTags.metaFileTag) != null)
+                                                    .Where(element => element.Descendants(XmlTags.descriptionTag).First().Value != "");
 
-                foreach (var descriptionElement in enableDrafts)
+                    foreach (var descriptionElement in enableDrafts) {
+                        metaFileElements.DescendantsAndSelf()
+                                        .Where(metaElement => metaElement.Attribute(XmlTags.guidAttrTag) != null)
+                                        .Where(metaElement => metaElement.Attribute(XmlTags.guidAttrTag).Value == descriptionElement.Attribute(XmlTags.guidAttrTag).Value)
+                                        .ToList()
+                                        .ForEach(element => {
+                                            string guid = element.Attribute(XmlTags.guidAttrTag).Value;
+                                            string fileName = descriptionElement.Attribute(XmlTags.fileNameAttrTag).Value;
+                                            string filePath = element.Attribute(XmlTags.filePathAttrTag).Value;
+                                            string description = descriptionElement.Descendants(XmlTags.descriptionTag).First().Value;
+
+                                            documentModels.Add(new PrefabDocumentModel(guid, fileName, filePath, description));
+                                        });
+                    }
+                }
+                catch
                 {
-                    metaFileElements.DescendantsAndSelf()
-                                    .Where(metaElement => metaElement.Attribute(XmlTags.guidAttrTag) != null)
-                                    .Where(metaElement => metaElement.Attribute(XmlTags.guidAttrTag).Value == descriptionElement.Attribute(XmlTags.guidAttrTag).Value)
-                                    .ToList()
-                                    .ForEach(element =>
-                                    {
-                                        string guid = element.Attribute(XmlTags.guidAttrTag).Value;
-                                        string fileName = descriptionElement.Attribute(XmlTags.fileNameAttrTag).Value;
-                                        string filePath = element.Attribute(XmlTags.filePathAttrTag).Value;
-                                        string description = descriptionElement.Descendants(XmlTags.descriptionTag).First().Value;
-
-                                        documentModels.Add(new PrefabDocumentModel(guid, fileName, filePath, description));
-                                    });
+                    documentModels = new List<PrefabDocumentModel>();
                 }
             });
 
