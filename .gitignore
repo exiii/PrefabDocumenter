@@ -331,5 +331,5 @@ ASALocalRun/
 # Local History for Visual Studio
 .localhistory/
 
-# SQLite.Interop.dll
-!SQLite.Interop.dll
+#SQLite.Interop
+!SQLite.Interop/
