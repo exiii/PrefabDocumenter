@@ -63,31 +63,37 @@ namespace PrefabDocumenter
             await Task.Run(() => {
                 foreach (var descriptionElement in enableDrafts)
                 {
-                    metaFileElements.DescendantsAndSelf()
-                        .Where(metaElement => metaElement.Attribute(XmlTags.guidAttrTag) != null)
-                        .Where(metaElement => metaElement.Attribute(XmlTags.guidAttrTag).Value == descriptionElement.Attribute(XmlTags.guidAttrTag).Value)
-                        .ToList()
-                        .ForEach(element => {
-                            var htmlElements = new List<IElement>();
+                    try {
+                        metaFileElements.DescendantsAndSelf()
+                            .Where(metaElement => metaElement.Attribute(XmlTags.guidAttrTag) != null)
+                            .Where(metaElement => metaElement.Attribute(XmlTags.guidAttrTag).Value == descriptionElement.Attribute(XmlTags.guidAttrTag).Value)
+                            .ToList()
+                            .ForEach(element => {
+                                var htmlElements = new List<IElement>();
 
-                            var h2 = document.CreateElement("h2");
-                            h2.TextContent = Regex.Replace(descriptionElement.Attribute(XmlTags.fileNameAttrTag).Value, @".meta$", "");
-                            htmlElements.Add(h2);
+                                var h2 = document.CreateElement("h2");
+                                h2.TextContent = Regex.Replace(descriptionElement.Attribute(XmlTags.fileNameAttrTag).Value, @".meta$", "");
+                                htmlElements.Add(h2);
 
-                            var pathPTag = document.CreateElement("p");
-                            pathPTag.TextContent = "Path: " + Regex.Replace(element.Attribute(XmlTags.filePathAttrTag).Value, @".meta$", "");
-                            htmlElements.Add(pathPTag);
+                                var pathPTag = document.CreateElement("p");
+                                pathPTag.TextContent = "Path: " + Regex.Replace(element.Attribute(XmlTags.filePathAttrTag).Value, @".meta$", "");
+                                htmlElements.Add(pathPTag);
 
-                            var guidPTag = document.CreateElement("p");
-                            guidPTag.TextContent = "Guid: " + element.Attribute(XmlTags.guidAttrTag).Value;
-                            htmlElements.Add(guidPTag);
+                                var guidPTag = document.CreateElement("p");
+                                guidPTag.TextContent = "Guid: " + element.Attribute(XmlTags.guidAttrTag).Value;
+                                htmlElements.Add(guidPTag);
 
-                            var descriptionPTag = document.CreateElement("p");
-                            descriptionPTag.TextContent = descriptionElement.Descendants(XmlTags.descriptionTag).First().Value;
-                            htmlElements.Add(descriptionPTag);
+                                var descriptionPTag = document.CreateElement("p");
+                                descriptionPTag.TextContent = descriptionElement.Descendants(XmlTags.descriptionTag).First().Value;
+                                htmlElements.Add(descriptionPTag);
 
-                            htmlElements.ForEach(htmlElement => document.Body.AppendChild(htmlElement));                        
-                        });
+                                htmlElements.ForEach(htmlElement => document.Body.AppendChild(htmlElement));
+                            });
+                    }
+                    catch
+                    {
+                        document = parser.Parse(htmlTemplate.Content);
+                    }
                 }
 
             });
