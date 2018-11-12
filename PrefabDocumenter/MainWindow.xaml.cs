@@ -273,7 +273,7 @@ namespace PrefabDocumenter
 
             dialog.Filters.Add(filter);
             dialog.AlwaysAppendDefaultExtension = true;
-            dialog.DefaultExtension = ".xml";
+            dialog.DefaultExtension = filter.Extensions.First();
 
             var result = dialog.ShowDialog();
 
