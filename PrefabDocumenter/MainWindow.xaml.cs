@@ -20,7 +20,6 @@ using AngleSharp.Html;
 using System.Text.RegularExpressions;
 using System.Collections.ObjectModel;
 using Microsoft.WindowsAPICodePack.Dialogs;
-using Microsoft.Win32;
 
 namespace PrefabDocumenter
 {
@@ -273,6 +272,8 @@ namespace PrefabDocumenter
             var dialog = new CommonSaveFileDialog();
 
             dialog.Filters.Add(filter);
+            dialog.AlwaysAppendDefaultExtension = true;
+            dialog.DefaultExtension = ".xml";
 
             var result = dialog.ShowDialog();
 
