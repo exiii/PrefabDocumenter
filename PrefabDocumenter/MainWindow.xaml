@@ -52,9 +52,9 @@
         <Label Content="Draft document tree view" HorizontalAlignment="Left" Margin="21,10,0,0" VerticalAlignment="Top" Width="149" Grid.Row="0" Grid.Column="1"/>
         <Button x:Name="LoadDraftDocumentButton" Content="Load Draft Document" Margin="0,3,149,0" VerticalAlignment="Top" Click="LoadDraftDocument" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" Width="130"/>
         <Button x:Name="CreateDraftDocumentButton" Content="Create Draft Document" HorizontalAlignment="Right" Margin="0,3,14,0" VerticalAlignment="Top" Width="130" Click="CreateDraftDocument" Grid.Row="1" Grid.Column="1"/>
-        <Button x:Name="UpdateDraftDocumentButton" Content="Update Draft Document" Grid.Column="1" HorizontalAlignment="Left" Margin="310,29,0,0" Grid.Row="1" VerticalAlignment="Top" Width="136" Click="UpdateDraftDocument"/>
+        <Button x:Name="UpdateDraftDocumentButton" Content="Update Draft Document" Grid.Column="1" Margin="0,29,14,0" Grid.Row="1" VerticalAlignment="Top" Click="UpdateDraftDocument" HorizontalAlignment="Right" Width="130"/>
 
-        <Button Content="Create DataBase" HorizontalAlignment="Right" Margin="0,59,14,0" VerticalAlignment="Top" Width="153" Click="CreateDbDocument" Grid.Row="1" Grid.Column="1"></Button>
+            <Button Content="Create DataBase" HorizontalAlignment="Right" Margin="0,59,14,0" VerticalAlignment="Top" Width="153" Click="CreateDbDocument" Grid.Row="1" Grid.Column="1"></Button>
     </Grid>
 
 </Window>
