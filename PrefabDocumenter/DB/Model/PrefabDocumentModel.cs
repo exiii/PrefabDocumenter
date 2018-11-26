@@ -74,20 +74,20 @@ namespace PrefabDocumenter
             await Task.Run(() => 
             {
                 try {
-                    var enableDrafts = draftElements.DescendantsAndSelf(XmlTags.metaFileTag)
-                                                    .Where(element => element.Elements(XmlTags.metaFileTag) != null)
-                                                    .Where(element => element.Descendants(XmlTags.descriptionTag).First().Value != "");
+                    var enableDrafts = draftElements.DescendantsAndSelf(XmlTags.MetaFileTag)
+                                                    .Where(element => element.Elements(XmlTags.MetaFileTag) != null)
+                                                    .Where(element => element.Descendants(XmlTags.DescriptionTag).First().Value != "");
 
                     foreach (var descriptionElement in enableDrafts) {
                         metaFileElements.DescendantsAndSelf()
-                                        .Where(metaElement => metaElement.Attribute(XmlTags.guidAttrTag) != null)
-                                        .Where(metaElement => metaElement.Attribute(XmlTags.guidAttrTag).Value == descriptionElement.Attribute(XmlTags.guidAttrTag).Value)
+                                        .Where(metaElement => metaElement.Attribute(XmlTags.GuidAttrTag) != null)
+                                        .Where(metaElement => metaElement.Attribute(XmlTags.GuidAttrTag).Value == descriptionElement.Attribute(XmlTags.GuidAttrTag).Value)
                                         .ToList()
                                         .ForEach(element => {
-                                            string guid = element.Attribute(XmlTags.guidAttrTag).Value;
-                                            string fileName = Regex.Replace(descriptionElement.Attribute(XmlTags.fileNameAttrTag).Value, ".meta$", "");
-                                            string filePath = Regex.Replace(element.Attribute(XmlTags.filePathAttrTag).Value, ".meta$", ""); ;
-                                            string description = descriptionElement.Descendants(XmlTags.descriptionTag).First().Value;
+                                            string guid = element.Attribute(XmlTags.GuidAttrTag).Value;
+                                            string fileName = Regex.Replace(descriptionElement.Attribute(XmlTags.FileNameAttrTag).Value, ".meta$", "");
+                                            string filePath = Regex.Replace(element.Attribute(XmlTags.FilePathAttrTag).Value, ".meta$", ""); ;
+                                            string description = descriptionElement.Descendants(XmlTags.DescriptionTag).First().Value;
 
                                             documentModels.Add(new PrefabDocumentModel(guid, fileName, filePath, description));
                                         });

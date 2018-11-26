@@ -8,12 +8,12 @@ namespace PrefabDocumenter
 {
     public static class XmlTags
     {
-        public const string filePathAttrTag = "FilePath";
-        public const string fileNameAttrTag = "FileName";
-        public const string guidAttrTag = "Guid";
-        public const string descriptionTag = "Description";
-        public const string metaFileTag = "MetaFile";
-        public const string metaFilesTag = "MetaFiles";
-        public const string selectFolderPathAttrTag = "SelectFolderPath";
+        public const string FilePathAttrTag = "FilePath";
+        public const string FileNameAttrTag = "FileName";
+        public const string GuidAttrTag = "Guid";
+        public const string DescriptionTag = "Description";
+        public const string MetaFileTag = "MetaFile";
+        public const string MetaFilesTag = "MetaFiles";
+        public const string SelectFolderPathAttrTag = "SelectFolderPath";
     }
 }
