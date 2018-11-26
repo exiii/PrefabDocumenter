@@ -43,7 +43,7 @@
                             <div id="prefab">
                                 {prefabsRowList.map((data) => {
                                     return (
-                                        <FileDescComponent FileData={data} />
+                                        <FileInfoComponent FileData={data} />
                                     );
                                 })}
                             </div>
@@ -73,7 +73,7 @@
                 }
             }
 
-            class FileDescComponent extends React.Component {
+            class FileInfoComponent extends React.Component {
                 constructor(props) {
                     super(props);
                     this.state = {
@@ -83,8 +83,8 @@
 
                 render() {
                     return (
-                        <div class={this.props.FileData.indentLevel}>
-                            <input type="checkbox" checked={this.state.checked} onClick={this.onChange.bind(this)} />
+                        <div>
+                            <input type="checkbox" checked={this.state.checked} onClick={this.onClick.bind(this)} />
                             <h2 id="fileName">{this.props.FileData.filename}</h2>
                             {(() => {
                                 if(this.state.checked) {
@@ -107,7 +107,7 @@
                     );
                 }
 
-                onChange(e) {
+                onClick(e) {
                     this.setState({checked : !this.state.checked});
                 }
             }
