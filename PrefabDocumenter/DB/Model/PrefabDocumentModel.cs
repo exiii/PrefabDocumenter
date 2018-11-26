@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -84,8 +85,8 @@ namespace PrefabDocumenter
                                         .ToList()
                                         .ForEach(element => {
                                             string guid = element.Attribute(XmlTags.guidAttrTag).Value;
-                                            string fileName = descriptionElement.Attribute(XmlTags.fileNameAttrTag).Value;
-                                            string filePath = element.Attribute(XmlTags.filePathAttrTag).Value;
+                                            string fileName = Regex.Replace(descriptionElement.Attribute(XmlTags.fileNameAttrTag).Value, ".meta$", "");
+                                            string filePath = Regex.Replace(element.Attribute(XmlTags.filePathAttrTag).Value, ".meta$", ""); ;
                                             string description = descriptionElement.Descendants(XmlTags.descriptionTag).First().Value;
 
                                             documentModels.Add(new PrefabDocumentModel(guid, fileName, filePath, description));
