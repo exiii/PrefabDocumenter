@@ -14,6 +14,7 @@ namespace PrefabDocumenter
                                                   "guid TEXT PRIMARY KEY NOT NULL, " +
                                                   "filename TEXT NOT NULL, " +
                                                   "filepath TEXT NOT NULL, " +
+                                                  "indentLevel INT NOT NULL," +
                                                   "description TEXT);";
 
         public const string DropTableCommand = "DROP TABLE IF EXISTS Document;";
@@ -23,7 +24,7 @@ namespace PrefabDocumenter
             get
             {
                 return $@"INSERT INTO {TableName} " +
-                       $@"VALUES('{Guid}', '{@FileName}', '{@FilePath}', '{@Description}');";
+                       $@"VALUES('{Guid}', '{@FileName}', '{@FilePath}', {IndentLevel}, '{@Description}');";
             }
         }
 
@@ -35,14 +36,17 @@ namespace PrefabDocumenter
 
         public string Description { get; }
 
+        public int IndentLevel { get; }
+
         public const string TableName = "Document";
 
-        public PrefabDocumentModel(string guid, string fileName, string filePath, string description)
+        public PrefabDocumentModel(string guid, string fileName, string filePath, string description, int indentLevel)
         {
             Guid = guid;
             FileName = fileName;
             FilePath = filePath;
             Description = description;
+            IndentLevel = indentLevel;
         }
 
         //<- static method
@@ -88,8 +92,9 @@ namespace PrefabDocumenter
                                             string fileName = Regex.Replace(descriptionElement.Attribute(XmlTags.FileNameAttrTag).Value, ".meta$", "");
                                             string filePath = Regex.Replace(element.Attribute(XmlTags.FilePathAttrTag).Value, ".meta$", ""); ;
                                             string description = descriptionElement.Descendants(XmlTags.DescriptionTag).First().Value;
+                                            int indentLevel = element.Ancestors().Count() - 2;
 
-                                            documentModels.Add(new PrefabDocumentModel(guid, fileName, filePath, description));
+                                            documentModels.Add(new PrefabDocumentModel(guid, fileName, filePath, description, indentLevel));
                                         });
                     }
                 }

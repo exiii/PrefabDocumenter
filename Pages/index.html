@@ -24,9 +24,9 @@
 
                     if(this.state.value != null) {
                         let stmt = (this.state.value).prepare("select * from Document;");
-                        stmt.getAsObject({$guid:1 , $filename:2, $filepath:3, $description:4});
+                        stmt.getAsObject({$guid:1 , $filename:2, $filepath:3, $indentLevel:4, $description:5});
 
-                        stmt.bind({$guid:1 , $filename:2, $filepath:3, $description:4});
+                        stmt.bind({$guid:1 , $filename:2, $filepath:3, $indentLevel:4, $description:5});
                         while(stmt.step()) {
                             var row = stmt.getAsObject();
 
@@ -43,15 +43,7 @@
                             <div id="prefab">
                                 {prefabsRowList.map((data) => {
                                     return (
-                                        <div>
-                                            <h2 id="fileName">{data.filename}</h2>
-                                            <h3>FilePath</h3>
-                                            <p id="filePath">{data.filepath}</p>
-                                            <h3>Guid</h3>
-                                            <p id="guid">{data.guid}</p>
-                                            <h3>Description</h3>
-                                            <p id="description">{data.description}</p>
-                                        </div>
+                                        <FileDescComponent FileData={data} />
                                     );
                                 })}
                             </div>
@@ -78,6 +70,45 @@
                         this.setState({ value: result });
                     });
 
+                }
+            }
+
+            class FileDescComponent extends React.Component {
+                constructor(props) {
+                    super(props);
+                    this.state = {
+                        checked : true
+                    };
+                }
+
+                render() {
+                    return (
+                        <div class={this.props.FileData.indentLevel}>
+                            <input type="checkbox" checked={this.state.checked} onClick={this.onChange.bind(this)} />
+                            <h2 id="fileName">{this.props.FileData.filename}</h2>
+                            {(() => {
+                                if(this.state.checked) {
+                                    return (
+                                        <div>
+                                            <h3>FilePath</h3>
+                                            <p id="filePath">{this.props.FileData.filepath}</p>
+                                            <h3>Guid</h3>
+                                            <p id="guid">{this.props.FileData.guid}</p>
+                                            <h3>Description</h3>
+                                            <p id="description">{this.props.FileData.description}</p>
+                                        </div>
+                                    );
+                                }
+                                else {
+                                    return null;
+                                }
+                            })()}
+                        </div>
+                    );
+                }
+
+                onChange(e) {
+                    this.setState({checked : !this.state.checked});
                 }
             }
 
