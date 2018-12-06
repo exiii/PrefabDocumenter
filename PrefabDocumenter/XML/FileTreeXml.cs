@@ -1,5 +1,4 @@
 ﻿using exiii;
-using PrefabDocumenter.MetaFile;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace PrefabDocumenter.XML
+namespace PrefabDocumenter
 {
     public static class FileTreeXml
     {
@@ -19,30 +18,28 @@ namespace PrefabDocumenter.XML
         /// 
         /// </summary>
         /// <param name="FolderPath"></param>
-        public static async Task<XDocument> CreateXElement(string FolderPath)
+        public static async Task<XDocument> CreateXElement(string FolderPath, string FileNameFilterRegex = "")
         {
-            var metaFileTreeXml = new XElement(XMLTags.metaFilesTag, new XAttribute(XMLTags.selectFolderPathAttrTag, FolderPath));
+            var metaFileTreeXml = new XElement(XmlTags.MetaFilesTag, new XAttribute(XmlTags.SelectFolderPathAttrTag, FolderPath));
             await Task.Run(() => {
-                foreach (var path in Searcher.Search(FolderPath))
+                foreach (var path in Searcher.Search(FolderPath, FileNameFilterRegex))
                 {
                     var relativePath = Regex.Replace(path, Regex.Escape(FolderPath), "");
 
                     var beforeElement = metaFileTreeXml;
                     foreach (var fileName in Regex.Split(relativePath, pathSplitToken))
                     {
-                        var replaceName = Regex.Replace(fileName, " ", "_");
-                        replaceName = "_" + Regex.Replace(replaceName, @"[:|%|\(|\)|,|+|-|\[|\]]", "");
 
-                        if (beforeElement.Element(replaceName) == null)
+                        if (beforeElement.DescendantsAndSelf().Attributes(XmlTags.FileNameAttrTag).Where(name => name.Value == fileName).Any() == false)
                         {
-                            beforeElement.Add(new XElement(replaceName,
-                                Regex.IsMatch(fileName, ":") ? new XAttribute("Drive", true) : null,
-                                Regex.IsMatch(fileName, targetFileExtension) ? new XAttribute(XMLTags.filePathAttrTag, relativePath) : null,
-                                Regex.IsMatch(fileName, targetFileExtension) ? new XAttribute(XMLTags.guidAttrTag, UnityMetaParser.Parse(new StreamReader(path).ReadToEnd()).Guid) : null
+                            beforeElement.Add(new XElement("File",
+                                new XAttribute(XmlTags.FileNameAttrTag, fileName),
+                                Regex.IsMatch(fileName, targetFileExtension) ? new XAttribute(XmlTags.FilePathAttrTag, relativePath) : null,
+                                Regex.IsMatch(fileName, targetFileExtension) ? new XAttribute(XmlTags.GuidAttrTag, UnityMetaParser.Parse(new StreamReader(path).ReadToEnd()).Guid) : null
                                 ));
                         }
 
-                        beforeElement = beforeElement.Descendants(replaceName).First();
+                        beforeElement = beforeElement.Descendants().Where(element => element.Attribute(XmlTags.FileNameAttrTag).Value == fileName).First();
                     }
                 }
             });

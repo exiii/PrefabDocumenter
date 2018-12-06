@@ -31,18 +31,6 @@ namespace exiii
 
             return new UnityMetaNode("", guid.Value, "", "", "");
         }
-
-        /*
-        public static UnityMetaNode StreamParse(string path)
-        {
-
-        }
-
-        public static UnityMetaNode StreamParse(TextReader stream)
-        {
-
-        }
-        */
     }
 
     class UnityMetaNode

@@ -15,12 +15,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using exiii;
-using PrefabDocumenter.XML;
-using PrefabDocumenter.HTML;
 using AngleSharp.Dom.Html;
 using AngleSharp.Html;
 using System.Text.RegularExpressions;
 using System.Collections.ObjectModel;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace PrefabDocumenter
 {
@@ -29,24 +28,26 @@ namespace PrefabDocumenter
     /// </summary>
     public partial class MainWindow : Window
     {
-        const string xmlFilter = "XML(*.xml)|*.xml|全てのファイル (*.*)|*.*";
-        const string htmlFilter = "html(*.html)|*.html|全てのファイル (*.*)|*.*";
-        XElement loadFileTreeRootElement;
-        XElement loadDraftDocRootElement;
+        private const string xmlFilter = "XML(*.xml)|*.xml|全てのファイル (*.*)|*.*";
+        private CommonFileDialogFilter xmlCommonFilter = new CommonFileDialogFilter("XML", "xml");
+        private const string htmlFilter = "html(*.html)|*.html|全てのファイル (*.*)|*.*";
+        private CommonFileDialogFilter htmlCommonFilter = new CommonFileDialogFilter("HTML", "html");
+        private const string dbFilter = "db(*.db)|*.db|全てのファイル (*.*)|*.*";
+        private CommonFileDialogFilter dbCommonFilter = new CommonFileDialogFilter("DB", "db");
+
+        private XElement loadFileTreeRootElement;
+        private XElement loadDraftDocRootElement;
 
         public MainWindow()
         {
             InitializeComponent();
         }
 
+        //<-MainWindow.xaml call functions
         private void TargetFolderPathInject(object sender, RoutedEventArgs e)
         {
-            TargetFolderPath.Text = FileDialog.OpenFolderDialog();
-        }
-
-        private void HtmlTempPathInject(object sender, RoutedEventArgs e)
-        {
-            HtmlTempPath.Text = FileDialog.OpenFileDialog(htmlFilter);
+            FileDialog.OpenFolderDialog(out var path);
+            TargetFolderPath.Text = path;
         }
 
         private async void CreateTreeFile(object sender, RoutedEventArgs e)
@@ -57,9 +58,8 @@ namespace PrefabDocumenter
                 return;
             }
 
-            var path = FileDialog.SaveFileDialog(xmlFilter);
-
-            if(path == "")
+            var result = FileDialog.SaveFileDialog(xmlCommonFilter, out var path);
+            if (!result)
             {
                 return;
             }
@@ -68,7 +68,7 @@ namespace PrefabDocumenter
             {
                 toggleAllButtonEnabled(false);
 
-                var xDoc = await FileTreeXml.CreateXElement(TargetFolderPath.Text);
+                var xDoc = await FileTreeXml.CreateXElement(TargetFolderPath.Text, FileNameRegex.Text);
 
                 await Task.Run(() => {
                     xDoc.Save(fs);
@@ -85,16 +85,9 @@ namespace PrefabDocumenter
         private async void LoadXmlFile(object sender, RoutedEventArgs e)
         {
 
-            var path = FileDialog.OpenFileDialog(xmlFilter);
-
-            if(path == "")
+            var result = FileDialog.OpenFileDialog(xmlCommonFilter, out var path);
+            if (!result)
             {
-                return;
-            }
-
-            if (File.Exists(path) == false)
-            {
-                MessageBox.Show("正しいファイルを選択してください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -112,16 +105,9 @@ namespace PrefabDocumenter
 
         private async void LoadDraftDocument(object sender, RoutedEventArgs e)
         {
-            var path = FileDialog.OpenFileDialog(xmlFilter);
-
-            if (path == "")
+            var result = FileDialog.OpenFileDialog(xmlCommonFilter, out var path);
+            if (!result)
             {
-                return;
-            }
-
-            if (File.Exists(path) == false)
-            {
-                MessageBox.Show("正しいファイルを選択してください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -135,6 +121,100 @@ namespace PrefabDocumenter
             updateDraftDocTree(xDoc);
 
             toggleAllButtonEnabled(true);
+        }
+
+        private async void CreateDraftDocument(object sender, RoutedEventArgs e)
+        {
+            if (loadFileTreeRootElement == null)
+            {
+                MessageBox.Show("File tree xmlを読み込んでください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var result = FileDialog.SaveFileDialog(xmlCommonFilter, out var path);
+            if (!result)
+            {
+                return;
+            }
+
+            using (var fs = new FileStream(path, FileMode.Create))
+            {
+                toggleAllButtonEnabled(false);
+
+                var xDoc = await XmlDocument.CreateDraftDocument(loadFileTreeRootElement.DescendantsAndSelf().Where(element => element.Attribute("Guid") != null));
+
+                await Task.Run(() => {
+                    xDoc.Save(fs);
+                });
+
+                fs.Close();
+                fs.Dispose();
+
+                updateDraftDocTree(xDoc);
+
+                toggleAllButtonEnabled(true);
+            }
+        }
+
+        private async void UpdateDraftDocument(object sender, RoutedEventArgs e)
+        {
+            if (loadFileTreeRootElement == null)
+            {
+                MessageBox.Show("File tree xmlを読み込んでください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var result = FileDialog.OpenFileDialog(xmlCommonFilter, out var path);
+            if (!result)
+            {
+                return;
+            }
+
+            toggleAllButtonEnabled(false);
+
+            var xDoc = new XDocument();
+            await Task.Run(() => {
+                xDoc = XDocument.Load(path);
+            });
+
+            xDoc = await XmlDocument.UpdateDraftDocument(loadFileTreeRootElement.Elements(), xDoc.Elements());
+
+            using (var fs = new FileStream(path, FileMode.Create))
+            {
+                await Task.Run(() => {
+                    xDoc.Save(fs);
+                });
+
+                fs.Close();
+                fs.Dispose();
+            }
+
+            updateDraftDocTree(xDoc);
+
+            toggleAllButtonEnabled(true);
+        }
+
+        private async void CreateDbDocument(object sender, RoutedEventArgs e)
+        {
+            if (loadDraftDocRootElement == null || loadFileTreeRootElement == null)
+            {
+                MessageBox.Show("File tree xmlとDraft documentを読み込んでください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var result = FileDialog.SaveFileDialog(dbCommonFilter, out var path);
+            if (!result)
+            {
+                return;
+            }
+
+            var sqlProvider = new SqlDbProvider<PrefabDocumentModel>(path);
+
+            var models = await PrefabDocumentModel.CreateXmlToModel(loadDraftDocRootElement, loadFileTreeRootElement);
+
+            sqlProvider.InitTable();
+
+            sqlProvider.Inserts(models);
         }
 
         private void updateMetaFileTree(XDocument xDoc)
@@ -151,140 +231,87 @@ namespace PrefabDocumenter
             loadDraftDocRootElement = xDoc.Root;
         }
 
-        private async void CreateDraftDocument(object sender, RoutedEventArgs e)
-        {
-            if (loadFileTreeRootElement == null)
-            {
-                MessageBox.Show("File tree xmlを読み込んでください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            var path = FileDialog.SaveFileDialog(xmlFilter);
-
-            if (path == "")
-            {
-                return;
-            }
-
-            using (var fs = new FileStream(path, FileMode.Create))
-            {
-                toggleAllButtonEnabled(false);
-
-                var xDoc = await Document.CreateDraftDocument(loadFileTreeRootElement.DescendantsAndSelf().Where(element => element.Attribute("Guid") != null));
-
-                await Task.Run(() => {
-                    xDoc.Save(fs);
-                });
-
-                fs.Close();
-                fs.Dispose();
-
-                updateDraftDocTree(xDoc);
-
-                toggleAllButtonEnabled(true);
-            }
-        }
-
-        private async void CreateDocument(object sender, RoutedEventArgs e)
-        {
-            if(loadDraftDocRootElement == null || loadFileTreeRootElement == null)
-            {
-                MessageBox.Show("File tree xmlとDraft documentを読み込んでください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            if (!File.Exists(HtmlTempPath.Text))
-            {
-                MessageBox.Show("Html Template Pathに正しいファイルパスを指定してください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            var path = FileDialog.SaveFileDialog(htmlFilter);
-
-            if (path == "")
-            {
-                return;
-            }
-
-
-            using (var sw = new StringWriter())
-            {
-                toggleAllButtonEnabled(false);
-
-                var Doc = new Document(new StreamReader(HtmlTempPath.Text));
-
-                var htmlDocument = await Doc.CreateDocument(loadDraftDocRootElement, loadFileTreeRootElement);
-
-                var formatter = new PrettyMarkupFormatter();
-
-                htmlDocument.ToHtml(sw, formatter);
-
-                var streamWriter = File.CreateText(path);
-
-                await Task.Run(() => {
-                    streamWriter.Write(sw.ToString());
-                    streamWriter.Close();
-                });
-
-                toggleAllButtonEnabled(true);
-            }
-        }
-
         private void toggleAllButtonEnabled(bool isEnabled)
         {
             var buttons = MainGrid.Children.OfType<Button>();
 
-            Console.WriteLine("through");
-
             foreach (var button in buttons)
             {
                 button.IsEnabled = isEnabled;
-                Console.WriteLine(button.Name);
             }
         }
     }
 
     internal static class FileDialog
     {
-        internal static string OpenFileDialog(string filter)
+        internal static bool OpenFileDialog(CommonFileDialogFilter filter, out string FileName)
         {
-            var dialog = new Microsoft.Win32.OpenFileDialog();
+            var dialog = new CommonOpenFileDialog();
 
-            dialog.Filter = filter;
+            dialog.Filters.Add(filter);
 
-            if (dialog.ShowDialog() == false)
+            var result = dialog.ShowDialog();
+
+            switch (result)
             {
-                return "";
+                case CommonFileDialogResult.None:
+                    MessageBox.Show("正しいファイルを入力してください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    FileName = "";
+                    return false;
+                case CommonFileDialogResult.Cancel:
+                    FileName = "";
+                    return false;
             }
 
-            return dialog.FileName;
+            FileName = dialog.FileName;
+            return true;
         }
 
-        internal static string SaveFileDialog(string filter)
+        internal static bool SaveFileDialog(CommonFileDialogFilter filter, out string FileName)
         {
-            var dialog = new Microsoft.Win32.SaveFileDialog();
+            var dialog = new CommonSaveFileDialog();
 
-            dialog.Filter = filter;
+            dialog.Filters.Add(filter);
+            dialog.AlwaysAppendDefaultExtension = true;
+            dialog.DefaultExtension = filter.Extensions.First();
 
-            if (dialog.ShowDialog() == false)
+            var result = dialog.ShowDialog();
+
+            switch (result)
             {
-                return "";
+                case CommonFileDialogResult.None:
+                    MessageBox.Show("正しいパスを入力してください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    FileName = "";
+                    return false;
+                case CommonFileDialogResult.Cancel:
+                    FileName = "";
+                    return false;
             }
 
-            return dialog.FileName;
+            FileName = dialog.FileName;
+            return true;
         }
 
-        internal static string OpenFolderDialog()
+        internal static bool OpenFolderDialog(out string FileName)
         {
-            var dialog = new Microsoft.WindowsAPICodePack.Dialogs.CommonOpenFileDialog("保存フォルダ選択");
+            var dialog = new CommonOpenFileDialog("保存フォルダ選択");
             dialog.IsFolderPicker = true;
 
-            if (dialog.ShowDialog() != Microsoft.WindowsAPICodePack.Dialogs.CommonFileDialogResult.Ok)
+            var result = dialog.ShowDialog();
+
+            switch (result)
             {
-                return "";
+                case CommonFileDialogResult.None:
+                    MessageBox.Show("正しいパスを入力してください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    FileName = "";
+                    return false;
+                case CommonFileDialogResult.Cancel:
+                    FileName = "";
+                    return false;
             }
 
-            return dialog.FileName;
+            FileName = dialog.FileName;
+            return true;
         }
     }
 }

@@ -16,7 +16,7 @@
         </Style>
         <HierarchicalDataTemplate x:Key="XmlTemplate" ItemsSource="{Binding Elements, IsAsync=True}">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Name="nameTextBlock" Text="{Binding Path=Name.LocalName, IsAsync=True}"/>
+                <TextBlock Name="nameTextBlock" Text="{Binding Path=Attribute[FileName], IsAsync=True}"/>
                 <TextBlock Name="guidTextBlock" Text="{Binding Path=Attribute[Guid], IsAsync=True}" FontWeight="Bold" Margin="5,0"/>
                 <TextBlock Name="valueTextBlock" FontWeight="Bold" Margin="5,0" />
             </StackPanel>
@@ -44,17 +44,17 @@
         <Button x:Name="CreateFileTreeXMLButton" Content="Create File Tree XML" HorizontalAlignment="Right" Margin="0,3,6,0" VerticalAlignment="Top" Width="120" Click="CreateTreeFile" Grid.Row="1" Grid.Column="0"/>
         <Button x:Name="TargetFolderPathInjectButton" Content="..." HorizontalAlignment="Right" Margin="0,27,6,0" VerticalAlignment="Top" Width="24" Height="24" Click="TargetFolderPathInject" RenderTransformOrigin="0.625,-0.167" Grid.Row="1" Grid.Column="0"/>
         <TextBox x:Name="TargetFolderPath" Height="23" Margin="10,28,35,0" VerticalAlignment="Top" Grid.Row="1" Grid.Column="0"/>
-        <Label Content="Target folder path" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Width="105" Grid.Column="0" Grid.Row="1"/>
+        <TextBox x:Name="FileNameRegex" VerticalAlignment="Top" Height="23" Margin="249,54,35,0" Grid.Row="1" Grid.Column="0"/>
+        <Label Content="FileName Filter Regex" Margin="119,53,0,0" Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="125"/>
+        <Label Content="Target folder path" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Grid.Column="0" Grid.Row="1"/>
 
         <TreeView Margin="10,40,10,10" x:Name="draftTreeView" ItemTemplate="{StaticResource XmlTemplate}" Grid.Row="0" Grid.Column="1"/>
         <Label Content="Draft document tree view" HorizontalAlignment="Left" Margin="21,10,0,0" VerticalAlignment="Top" Width="149" Grid.Row="0" Grid.Column="1"/>
         <Button x:Name="LoadDraftDocumentButton" Content="Load Draft Document" Margin="0,3,149,0" VerticalAlignment="Top" Click="LoadDraftDocument" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" Width="130"/>
         <Button x:Name="CreateDraftDocumentButton" Content="Create Draft Document" HorizontalAlignment="Right" Margin="0,3,14,0" VerticalAlignment="Top" Width="130" Click="CreateDraftDocument" Grid.Row="1" Grid.Column="1"/>
-        <Label Content="HTML Template Path" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Width="119" Grid.Column="1" Grid.Row="1"/>
-        <TextBox x:Name="HtmlTempPath" Height="23" Margin="10,28,43,0" VerticalAlignment="Top" Grid.Row="1" Grid.Column="1"/>
-        <Button x:Name="HtmlTempPathInjectButton" Content="..." HorizontalAlignment="Right" Margin="0,27,14,0" VerticalAlignment="Top" Width="24" Height="24" Click="HtmlTempPathInject" Grid.Row="1" Grid.Column="1"/>
+        <Button x:Name="UpdateDraftDocumentButton" Content="Update Draft Document" Grid.Column="1" Margin="0,29,14,0" Grid.Row="1" VerticalAlignment="Top" Click="UpdateDraftDocument" HorizontalAlignment="Right" Width="130"/>
 
-        <Button Content="Create Document" HorizontalAlignment="Right" Margin="0,59,14,0" VerticalAlignment="Top" Width="153" Click="CreateDocument" Grid.Row="1" Grid.Column="1"></Button>
+        <Button Content="Create DataBase" HorizontalAlignment="Right" Margin="0,59,14,0" VerticalAlignment="Top" Width="153" Click="CreateDbDocument" Grid.Row="1" Grid.Column="1"></Button>
     </Grid>
 
 </Window>
