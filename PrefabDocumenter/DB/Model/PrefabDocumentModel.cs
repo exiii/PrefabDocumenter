@@ -88,18 +88,11 @@ namespace PrefabDocumenter
                                         .Where(metaElement => metaElement.Attribute(XmlTags.GuidAttrTag).Value == descriptionElement.Attribute(XmlTags.GuidAttrTag).Value)
                                         .ToList()
                                         .ForEach(element => {
-<<<<<<< HEAD
-                                            string guid = element.Attribute(XmlTags.guidAttrTag).Value;
-                                            string fileName = Regex.Replace(descriptionElement.Attribute(XmlTags.fileNameAttrTag).Value, ".meta$", "");
-                                            string filePath = Regex.Replace(element.Attribute(XmlTags.filePathAttrTag).Value, ".meta$", ""); ;
-                                            string description = descriptionElement.Descendants(XmlTags.descriptionTag).First().Value;
-=======
                                             string guid = element.Attribute(XmlTags.GuidAttrTag).Value;
                                             string fileName = Regex.Replace(descriptionElement.Attribute(XmlTags.FileNameAttrTag).Value, ".meta$", "");
                                             string filePath = Regex.Replace(element.Attribute(XmlTags.FilePathAttrTag).Value, ".meta$", ""); ;
                                             string description = descriptionElement.Descendants(XmlTags.DescriptionTag).First().Value;
                                             int indentLevel = element.Ancestors().Count() - 2;
->>>>>>> master
 
                                             documentModels.Add(new PrefabDocumentModel(guid, fileName, filePath, description, indentLevel));
                                         });
