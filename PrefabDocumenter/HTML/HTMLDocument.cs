@@ -53,9 +53,9 @@ namespace PrefabDocumenter
 
         public async Task<IHtmlDocument> CreateDocument(IEnumerable<XElement> draftElements, IEnumerable<XElement> metaFileElements)
         {
-            var enableDrafts = draftElements.DescendantsAndSelf(XmlTags.metaFileTag)
-                .Where(element => element.Elements(XmlTags.metaFileTag) != null)
-                .Where(element => element.Descendants(XmlTags.descriptionTag).First().Value != "");
+            var enableDrafts = draftElements.DescendantsAndSelf(XmlTags.MetaFileTag)
+                .Where(element => element.Elements(XmlTags.MetaFileTag) != null)
+                .Where(element => element.Descendants(XmlTags.DescriptionTag).First().Value != "");
 
             var parser = new HtmlParser();
             var document = parser.Parse(htmlTemplate.Content);
@@ -65,26 +65,26 @@ namespace PrefabDocumenter
                 {
                     try {
                         metaFileElements.DescendantsAndSelf()
-                            .Where(metaElement => metaElement.Attribute(XmlTags.guidAttrTag) != null)
-                            .Where(metaElement => metaElement.Attribute(XmlTags.guidAttrTag).Value == descriptionElement.Attribute(XmlTags.guidAttrTag).Value)
+                            .Where(metaElement => metaElement.Attribute(XmlTags.GuidAttrTag) != null)
+                            .Where(metaElement => metaElement.Attribute(XmlTags.GuidAttrTag).Value == descriptionElement.Attribute(XmlTags.GuidAttrTag).Value)
                             .ToList()
                             .ForEach(element => {
                                 var htmlElements = new List<IElement>();
 
                                 var h2 = document.CreateElement("h2");
-                                h2.TextContent = Regex.Replace(descriptionElement.Attribute(XmlTags.fileNameAttrTag).Value, @".meta$", "");
+                                h2.TextContent = Regex.Replace(descriptionElement.Attribute(XmlTags.FileNameAttrTag).Value, @".meta$", "");
                                 htmlElements.Add(h2);
 
                                 var pathPTag = document.CreateElement("p");
-                                pathPTag.TextContent = "Path: " + Regex.Replace(element.Attribute(XmlTags.filePathAttrTag).Value, @".meta$", "");
+                                pathPTag.TextContent = "Path: " + Regex.Replace(element.Attribute(XmlTags.FilePathAttrTag).Value, @".meta$", "");
                                 htmlElements.Add(pathPTag);
 
                                 var guidPTag = document.CreateElement("p");
-                                guidPTag.TextContent = "Guid: " + element.Attribute(XmlTags.guidAttrTag).Value;
+                                guidPTag.TextContent = "Guid: " + element.Attribute(XmlTags.GuidAttrTag).Value;
                                 htmlElements.Add(guidPTag);
 
                                 var descriptionPTag = document.CreateElement("p");
-                                descriptionPTag.TextContent = descriptionElement.Descendants(XmlTags.descriptionTag).First().Value;
+                                descriptionPTag.TextContent = descriptionElement.Descendants(XmlTags.DescriptionTag).First().Value;
                                 htmlElements.Add(descriptionPTag);
 
                                 htmlElements.ForEach(htmlElement => document.Body.AppendChild(htmlElement));

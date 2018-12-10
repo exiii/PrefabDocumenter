@@ -14,6 +14,7 @@ namespace PrefabDocumenter
                                                   "guid TEXT PRIMARY KEY NOT NULL, " +
                                                   "filename TEXT NOT NULL, " +
                                                   "filepath TEXT NOT NULL, " +
+                                                  "indentLevel INT NOT NULL," +
                                                   "description TEXT);";
 
         public const string DropTableCommand = "DROP TABLE IF EXISTS Document;";
@@ -23,7 +24,7 @@ namespace PrefabDocumenter
             get
             {
                 return $@"INSERT INTO {TableName} " +
-                       $@"VALUES('{Guid}', '{@FileName}', '{@FilePath}', '{@Description}');";
+                       $@"VALUES('{Guid}', '{@FileName}', '{@FilePath}', {IndentLevel}, '{@Description}');";
             }
         }
 
@@ -35,14 +36,17 @@ namespace PrefabDocumenter
 
         public string Description { get; }
 
+        public int IndentLevel { get; }
+
         public const string TableName = "Document";
 
-        public PrefabDocumentModel(string guid, string fileName, string filePath, string description)
+        public PrefabDocumentModel(string guid, string fileName, string filePath, string description, int indentLevel)
         {
             Guid = guid;
             FileName = fileName;
             FilePath = filePath;
             Description = description;
+            IndentLevel = indentLevel;
         }
 
         //<- static method
@@ -74,22 +78,30 @@ namespace PrefabDocumenter
             await Task.Run(() => 
             {
                 try {
-                    var enableDrafts = draftElements.DescendantsAndSelf(XmlTags.metaFileTag)
-                                                    .Where(element => element.Elements(XmlTags.metaFileTag) != null)
-                                                    .Where(element => element.Descendants(XmlTags.descriptionTag).First().Value != "");
+                    var enableDrafts = draftElements.DescendantsAndSelf(XmlTags.MetaFileTag)
+                                                    .Where(element => element.Elements(XmlTags.MetaFileTag) != null)
+                                                    .Where(element => element.Descendants(XmlTags.DescriptionTag).First().Value != "");
 
                     foreach (var descriptionElement in enableDrafts) {
                         metaFileElements.DescendantsAndSelf()
-                                        .Where(metaElement => metaElement.Attribute(XmlTags.guidAttrTag) != null)
-                                        .Where(metaElement => metaElement.Attribute(XmlTags.guidAttrTag).Value == descriptionElement.Attribute(XmlTags.guidAttrTag).Value)
+                                        .Where(metaElement => metaElement.Attribute(XmlTags.GuidAttrTag) != null)
+                                        .Where(metaElement => metaElement.Attribute(XmlTags.GuidAttrTag).Value == descriptionElement.Attribute(XmlTags.GuidAttrTag).Value)
                                         .ToList()
                                         .ForEach(element => {
+<<<<<<< HEAD
                                             string guid = element.Attribute(XmlTags.guidAttrTag).Value;
                                             string fileName = Regex.Replace(descriptionElement.Attribute(XmlTags.fileNameAttrTag).Value, ".meta$", "");
                                             string filePath = Regex.Replace(element.Attribute(XmlTags.filePathAttrTag).Value, ".meta$", ""); ;
                                             string description = descriptionElement.Descendants(XmlTags.descriptionTag).First().Value;
+=======
+                                            string guid = element.Attribute(XmlTags.GuidAttrTag).Value;
+                                            string fileName = Regex.Replace(descriptionElement.Attribute(XmlTags.FileNameAttrTag).Value, ".meta$", "");
+                                            string filePath = Regex.Replace(element.Attribute(XmlTags.FilePathAttrTag).Value, ".meta$", ""); ;
+                                            string description = descriptionElement.Descendants(XmlTags.DescriptionTag).First().Value;
+                                            int indentLevel = element.Ancestors().Count() - 2;
+>>>>>>> master
 
-                                            documentModels.Add(new PrefabDocumentModel(guid, fileName, filePath, description));
+                                            documentModels.Add(new PrefabDocumentModel(guid, fileName, filePath, description, indentLevel));
                                         });
                     }
                 }

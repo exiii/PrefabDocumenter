@@ -20,7 +20,7 @@ namespace PrefabDocumenter
         /// <param name="FolderPath"></param>
         public static async Task<XDocument> CreateXElement(string FolderPath, string FileNameFilterRegex = "")
         {
-            var metaFileTreeXml = new XElement(XmlTags.metaFilesTag, new XAttribute(XmlTags.selectFolderPathAttrTag, FolderPath));
+            var metaFileTreeXml = new XElement(XmlTags.MetaFilesTag, new XAttribute(XmlTags.SelectFolderPathAttrTag, FolderPath));
             await Task.Run(() => {
                 foreach (var path in Searcher.Search(FolderPath, FileNameFilterRegex))
                 {
@@ -30,16 +30,16 @@ namespace PrefabDocumenter
                     foreach (var fileName in Regex.Split(relativePath, pathSplitToken))
                     {
 
-                        if (beforeElement.DescendantsAndSelf().Attributes(XmlTags.fileNameAttrTag).Where(name => name.Value == fileName).Any() == false)
+                        if (beforeElement.DescendantsAndSelf().Attributes(XmlTags.FileNameAttrTag).Where(name => name.Value == fileName).Any() == false)
                         {
                             beforeElement.Add(new XElement("File",
-                                new XAttribute(XmlTags.fileNameAttrTag, fileName),
-                                Regex.IsMatch(fileName, targetFileExtension) ? new XAttribute(XmlTags.filePathAttrTag, relativePath) : null,
-                                Regex.IsMatch(fileName, targetFileExtension) ? new XAttribute(XmlTags.guidAttrTag, UnityMetaParser.Parse(new StreamReader(path).ReadToEnd()).Guid) : null
+                                new XAttribute(XmlTags.FileNameAttrTag, fileName),
+                                Regex.IsMatch(fileName, targetFileExtension) ? new XAttribute(XmlTags.FilePathAttrTag, relativePath) : null,
+                                Regex.IsMatch(fileName, targetFileExtension) ? new XAttribute(XmlTags.GuidAttrTag, UnityMetaParser.Parse(new StreamReader(path).ReadToEnd()).Guid) : null
                                 ));
                         }
 
-                        beforeElement = beforeElement.Descendants().Where(element => element.Attribute(XmlTags.fileNameAttrTag).Value == fileName).First();
+                        beforeElement = beforeElement.Descendants().Where(element => element.Attribute(XmlTags.FileNameAttrTag).Value == fileName).First();
                     }
                 }
             });
