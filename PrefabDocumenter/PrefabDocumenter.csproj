@@ -78,8 +78,6 @@
     <Compile Include="DB\Model\PrefabDocumentModel.cs" />
     <Compile Include="DB\Model\interface\IModel.cs" />
     <Compile Include="DB\SqlDbProvider.cs" />
-    <Compile Include="HTML\HtmlDocument.cs" />
-    <Compile Include="HTML\HtmlTemplate.cs" />
     <Compile Include="MetaFile\SreachMetaFile.cs" />
     <Compile Include="MetaFile\UnityMetaParser.cs" />
     <Compile Include="XML\FileTreeXml.cs" />
