@@ -8,7 +8,7 @@
 
     <Window.Resources>
         <Style TargetType="{x:Type TreeViewItem}">
-            <Setter Property="IsExpanded" Value="True" />
+            <Setter Property="IsExpanded" Value="False" />
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
