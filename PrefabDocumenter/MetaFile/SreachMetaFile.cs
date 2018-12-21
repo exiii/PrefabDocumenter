@@ -10,7 +10,7 @@ namespace PrefabDocumenter
 {
     static class Searcher
     {
-        const string targetFileExtension = @".*\.meta";
+        const string targetFileExtension = @".*\.meta$";
 
         static public List<string> Search(string targetFolderPath, string FileNameFilterRegex = "")
         {
