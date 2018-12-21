@@ -18,10 +18,10 @@ namespace PrefabDocumenter
         public static string DropTableCommand;
         public static string CreateTableCommand;
 
-        public SqlDbProvider(string dbFilePath)
+        public SqlDbProvider(string DbFilePath)
         {
-            this.dbFilePath = dbFilePath;
-            sqlConnSB = new SQLiteConnectionStringBuilder { DataSource = this.dbFilePath };
+            dbFilePath = DbFilePath;
+            sqlConnSB = new SQLiteConnectionStringBuilder { DataSource = dbFilePath };
 
             dbConnecter = new SQLiteConnection(sqlConnSB.ToString());
             dbConnecter.Open();

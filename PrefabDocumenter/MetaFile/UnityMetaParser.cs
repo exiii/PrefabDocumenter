@@ -18,10 +18,10 @@ namespace exiii
         /// <summary>
         /// FileFormatVersion, FolderAsset, TimeCreated and LicenseType isn't available.
         /// </summary>
-        /// <param name="targetSrting"></param>
-        public static UnityMetaNode Parse(string targetSrting)
+        /// <param name="TargetSrting"></param>
+        public static UnityMetaNode Parse(string TargetSrting)
         {
-            var stringReader = new StringReader(targetSrting);
+            var stringReader = new StringReader(TargetSrting);
             var yaml = new YamlStream();
 
             yaml.Load(stringReader);

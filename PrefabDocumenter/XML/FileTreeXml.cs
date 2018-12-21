@@ -12,17 +12,19 @@ namespace PrefabDocumenter
     public static class FileTreeXml
     {
         const string pathSplitToken = @"\\";
-        const string targetFileExtension = @".*\.meta$";
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="FolderPath"></param>
-        public static async Task<XDocument> CreateXElement(string FolderPath, string FileNameFilterRegex = "")
+        public static async Task<XDocument> CreateXElement(string FolderPath, string TargetFileExtension, string FileNameFilterRegex = "")
         {
             var metaFileTreeXml = new XElement(XmlTags.MetaFilesTag, new XAttribute(XmlTags.SelectFolderPathAttrTag, FolderPath));
+
+            var metaFileSearcher = new FileSearcher(TargetFileExtension);
+
             await Task.Run(() => {
-                foreach (var path in Searcher.Search(FolderPath, FileNameFilterRegex))
+                foreach (var path in metaFileSearcher.Search(FolderPath, FileNameFilterRegex))
                 {
                     var relativePath = Regex.Replace(path, Regex.Escape(FolderPath), "");
 
@@ -32,10 +34,12 @@ namespace PrefabDocumenter
 
                         if (beforeElement.DescendantsAndSelf().Attributes(XmlTags.FileNameAttrTag).Where(name => name.Value == fileName).Any() == false)
                         {
+                            Console.WriteLine(relativePath);
+
                             beforeElement.Add(new XElement("File",
                                 new XAttribute(XmlTags.FileNameAttrTag, fileName),
-                                Regex.IsMatch(fileName, targetFileExtension) ? new XAttribute(XmlTags.FilePathAttrTag, relativePath) : null,
-                                Regex.IsMatch(fileName, targetFileExtension) ? new XAttribute(XmlTags.GuidAttrTag, UnityMetaParser.Parse(new StreamReader(path).ReadToEnd()).Guid) : null
+                                Regex.IsMatch(fileName, TargetFileExtension) ? new XAttribute(XmlTags.FilePathAttrTag, relativePath) : null,
+                                Regex.IsMatch(fileName, TargetFileExtension) ? new XAttribute(XmlTags.GuidAttrTag, UnityMetaParser.Parse(new StreamReader(path).ReadToEnd()).Guid) : null
                                 ));
                         }
 

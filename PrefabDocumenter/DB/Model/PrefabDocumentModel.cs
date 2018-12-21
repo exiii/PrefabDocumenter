@@ -40,13 +40,13 @@ namespace PrefabDocumenter
 
         public const string TableName = "Document";
 
-        public PrefabDocumentModel(string guid, string fileName, string filePath, string description, int indentLevel)
+        public PrefabDocumentModel(string Guid, string FileName, string FilePath, string Description, int IndentLevel)
         {
-            Guid = guid;
-            FileName = fileName;
-            FilePath = filePath;
-            Description = description;
-            IndentLevel = indentLevel;
+            this.Guid = Guid;
+            this.FileName = FileName;
+            this.FilePath = FilePath;
+            this.Description = Description;
+            this.IndentLevel = IndentLevel;
         }
 
         //<- static method
@@ -56,34 +56,34 @@ namespace PrefabDocumenter
             SqlDbProvider<PrefabDocumentModel>.CreateTableCommand = CreateTableCommand;
         }
 
-        public static async Task<List<PrefabDocumentModel>> CreateXmlToModel(XElement draftRootElement, XElement metaFileElementRoot)
+        public static async Task<List<PrefabDocumentModel>> CreateXmlToModel(XElement DraftRootElement, XElement MetaFileElementRoot)
         {
-            return await CreateXmlToModel(draftRootElement.Elements(), metaFileElementRoot.Elements());
+            return await CreateXmlToModel(DraftRootElement.Elements(), MetaFileElementRoot.Elements());
         }
 
-        public static async Task<List<PrefabDocumentModel>> CreateXmlToModel(IEnumerable<XElement> draftElements, XElement metaFileRootElement)
+        public static async Task<List<PrefabDocumentModel>> CreateXmlToModel(IEnumerable<XElement> DraftElements, XElement MetaFileRootElement)
         {
-            return await CreateXmlToModel(draftElements, metaFileRootElement.Elements());
+            return await CreateXmlToModel(DraftElements, MetaFileRootElement.Elements());
         }
 
-        public static async Task<List<PrefabDocumentModel>> CreateXmlToModel(XElement draftRootElement, IEnumerable<XElement> metaFileElements)
+        public static async Task<List<PrefabDocumentModel>> CreateXmlToModel(XElement DraftRootElement, IEnumerable<XElement> MetaFileElements)
         {
-            return await CreateXmlToModel(draftRootElement.Elements(), metaFileElements);
+            return await CreateXmlToModel(DraftRootElement.Elements(), MetaFileElements);
         }
 
-        public static async Task<List<PrefabDocumentModel>> CreateXmlToModel(IEnumerable<XElement> draftElements, IEnumerable<XElement> metaFileElements)
+        public static async Task<List<PrefabDocumentModel>> CreateXmlToModel(IEnumerable<XElement> DraftElements, IEnumerable<XElement> MetaFileElements)
         {
             var documentModels = new List<PrefabDocumentModel>();
 
             await Task.Run(() => 
             {
                 try {
-                    var enableDrafts = draftElements.DescendantsAndSelf(XmlTags.MetaFileTag)
+                    var enableDrafts = DraftElements.DescendantsAndSelf(XmlTags.MetaFileTag)
                                                     .Where(element => element.Elements(XmlTags.MetaFileTag) != null)
                                                     .Where(element => element.Descendants(XmlTags.DescriptionTag).First().Value != "");
 
                     foreach (var descriptionElement in enableDrafts) {
-                        metaFileElements.DescendantsAndSelf()
+                        MetaFileElements.DescendantsAndSelf()
                                         .Where(metaElement => metaElement.Attribute(XmlTags.GuidAttrTag) != null)
                                         .Where(metaElement => metaElement.Attribute(XmlTags.GuidAttrTag).Value == descriptionElement.Attribute(XmlTags.GuidAttrTag).Value)
                                         .ToList()

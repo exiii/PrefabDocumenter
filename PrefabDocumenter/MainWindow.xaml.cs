@@ -54,7 +54,7 @@ namespace PrefabDocumenter
 
             using (var fs = new FileStream(path, FileMode.Create))
             {
-                toggleAllButtonEnabled(false);
+                ToggleAllButtonEnabled(false);
 
                 var xDoc = await FileTreeXml.CreateXElement(TargetFolderPath.Text, FileNameRegex.Text);
 
@@ -65,8 +65,8 @@ namespace PrefabDocumenter
                 fs.Close();
                 fs.Dispose();
 
-                updateMetaFileTree(xDoc);
-                toggleAllButtonEnabled(true);
+                UpdateMetaFileTree(xDoc);
+                ToggleAllButtonEnabled(true);
             }
         }
 
@@ -79,16 +79,16 @@ namespace PrefabDocumenter
                 return;
             }
 
-            toggleAllButtonEnabled(false);
+            ToggleAllButtonEnabled(false);
 
             var xDoc = new XDocument();
             await Task.Run(() => {
                 xDoc = XDocument.Load(path);
             });
 
-            updateMetaFileTree(xDoc);
+            UpdateMetaFileTree(xDoc);
 
-            toggleAllButtonEnabled(true);
+            ToggleAllButtonEnabled(true);
         }
 
         private async void LoadDraftDocument(object sender, RoutedEventArgs e)
@@ -99,16 +99,16 @@ namespace PrefabDocumenter
                 return;
             }
 
-            toggleAllButtonEnabled(false);
+            ToggleAllButtonEnabled(false);
 
             var xDoc = new XDocument();
             await Task.Run(() => {
                 xDoc = XDocument.Load(path); ;
             });
 
-            updateDraftDocTree(xDoc);
+            UpdateDraftDocTree(xDoc);
 
-            toggleAllButtonEnabled(true);
+            ToggleAllButtonEnabled(true);
         }
 
         private async void CreateDraftDocument(object sender, RoutedEventArgs e)
@@ -127,7 +127,7 @@ namespace PrefabDocumenter
 
             using (var fs = new FileStream(path, FileMode.Create))
             {
-                toggleAllButtonEnabled(false);
+                ToggleAllButtonEnabled(false);
 
                 var xDoc = await XmlDocument.CreateDraftDocument(loadFileTreeRootElement.DescendantsAndSelf().Where(element => element.Attribute("Guid") != null));
 
@@ -138,9 +138,9 @@ namespace PrefabDocumenter
                 fs.Close();
                 fs.Dispose();
 
-                updateDraftDocTree(xDoc);
+                UpdateDraftDocTree(xDoc);
 
-                toggleAllButtonEnabled(true);
+                ToggleAllButtonEnabled(true);
             }
         }
 
@@ -158,7 +158,7 @@ namespace PrefabDocumenter
                 return;
             }
 
-            toggleAllButtonEnabled(false);
+            ToggleAllButtonEnabled(false);
 
             var xDoc = new XDocument();
             await Task.Run(() => {
@@ -177,9 +177,9 @@ namespace PrefabDocumenter
                 fs.Dispose();
             }
 
-            updateDraftDocTree(xDoc);
+            UpdateDraftDocTree(xDoc);
 
-            toggleAllButtonEnabled(true);
+            ToggleAllButtonEnabled(true);
         }
 
         private async void CreateDbDocument(object sender, RoutedEventArgs e)
@@ -205,21 +205,21 @@ namespace PrefabDocumenter
             sqlProvider.Inserts(models);
         }
 
-        private void updateMetaFileTree(XDocument xDoc)
+        private void UpdateMetaFileTree(XDocument xDoc)
         {
             metaFileTree.Items.Refresh();
             metaFileTree.ItemsSource = xDoc.Root.Elements();
             loadFileTreeRootElement = xDoc.Root;
         }
 
-        private void updateDraftDocTree(XDocument xDoc)
+        private void UpdateDraftDocTree(XDocument xDoc)
         {
             draftTreeView.Items.Refresh();
             draftTreeView.ItemsSource = xDoc.Root.Elements();
             loadDraftDocRootElement = xDoc.Root;
         }
 
-        private void toggleAllButtonEnabled(bool isEnabled)
+        private void ToggleAllButtonEnabled(bool isEnabled)
         {
             var buttons = MainGrid.Children.OfType<Button>();
 
@@ -282,8 +282,9 @@ namespace PrefabDocumenter
 
         internal static bool OpenFolderDialog(out string FileName)
         {
-            var dialog = new CommonOpenFileDialog("保存フォルダ選択");
-            dialog.IsFolderPicker = true;
+            var dialog = new CommonOpenFileDialog("保存フォルダ選択") {
+                IsFolderPicker = true
+            };
 
             var result = dialog.ShowDialog();
 

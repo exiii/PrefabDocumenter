@@ -14,14 +14,14 @@ namespace PrefabDocumenter
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="metaFileElement"></param>
+        /// <param name="MetaFileElement"></param>
         /// <returns></returns>
-        public static async Task<XDocument> CreateDraftDocument(IEnumerable<XElement> metaFileElement)
+        public static async Task<XDocument> CreateDraftDocument(IEnumerable<XElement> MetaFileElement)
         {
             var draftDocument = new XElement(XmlTags.MetaFilesTag);
 
             await Task.Run(() => {
-                foreach (var element in metaFileElement)
+                foreach (var element in MetaFileElement)
                 {
                     draftDocument.Add(new XElement(XmlTags.MetaFileTag,
                         new XAttribute(XmlTags.FileNameAttrTag, Regex.Split(element.Attribute(XmlTags.FilePathAttrTag).Value.ToString(), @"\\").Last()),
@@ -33,26 +33,26 @@ namespace PrefabDocumenter
             return new XDocument(new XDeclaration("1.0", "utf-8", null), draftDocument);
         }
 
-        public static async Task<XDocument> UpdateDraftDocument(IEnumerable<XElement> metaFileElement, IEnumerable<XElement> draftDocumentElement)
+        public static async Task<XDocument> UpdateDraftDocument(IEnumerable<XElement> MetaFileElement, IEnumerable<XElement> DraftDocumentElement)
         {
             var newDraftDocument = new XElement(XmlTags.MetaFilesTag);
 
-            metaFileElement = metaFileElement.DescendantsAndSelf()
+            MetaFileElement = MetaFileElement.DescendantsAndSelf()
                                              .Where(element => element.Attribute(XmlTags.GuidAttrTag) != null);
 
             await Task.Run(() =>
             {
                 try 
                 {
-                    foreach (var metaElement in metaFileElement) 
+                    foreach (var metaElement in MetaFileElement) 
                     {
-                        draftDocumentElement.DescendantsAndSelf()
+                        DraftDocumentElement.DescendantsAndSelf()
                                             .Where(draftElement => draftElement.Attribute(XmlTags.GuidAttrTag) != null)
                                             .Where(draftElement => draftElement.Attribute(XmlTags.GuidAttrTag).Value == metaElement.Attribute(XmlTags.GuidAttrTag).Value)
                                             .ToList()
                                             .ForEach(draftElement => newDraftDocument.Add(draftElement));
 
-                        var Exist = draftDocumentElement.DescendantsAndSelf()
+                        var Exist = DraftDocumentElement.DescendantsAndSelf()
                                                         .Where(draftElement => draftElement.Attribute(XmlTags.GuidAttrTag) != null)
                                                         .Where(draftElement => draftElement.Attribute(XmlTags.GuidAttrTag).Value == metaElement.Attribute(XmlTags.GuidAttrTag).Value)
                                                         .Any();
@@ -67,7 +67,7 @@ namespace PrefabDocumenter
                 }
                 catch 
                 {
-                    newDraftDocument.Add(draftDocumentElement);
+                    newDraftDocument.Add(DraftDocumentElement);
                 }
             });
 
