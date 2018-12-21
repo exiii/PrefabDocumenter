@@ -15,5 +15,6 @@ namespace PrefabDocumenter
         public const string MetaFileTag = "MetaFile";
         public const string MetaFilesTag = "MetaFiles";
         public const string SelectFolderPathAttrTag = "SelectFolderPath";
+        public const string Type = "Type";
     }
 }

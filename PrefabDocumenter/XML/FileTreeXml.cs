@@ -11,8 +11,12 @@ namespace PrefabDocumenter
 {
     public static class FileTreeXml
     {
-        const string pathSplitToken = @"\\";
-        const string MetaFileExtension = @".*\.meta$";
+        private const string pathSplitToken = @"\\";
+        private const string metaFileExtension = @".*\.meta$";
+        private const string fileExtension = @".+\..+$";
+
+        private const string fileTypeValue = "File";
+        private const string folderTypeValue = "Folder";
 
         /// <summary>
         /// 
@@ -22,7 +26,7 @@ namespace PrefabDocumenter
         {
             var metaFileTreeXml = new XElement(XmlTags.MetaFilesTag, new XAttribute(XmlTags.SelectFolderPathAttrTag, FolderPath));
 
-            var metaFileSearcher = new FileSearcher(MetaFileExtension);
+            var metaFileSearcher = new FileSearcher(metaFileExtension);
 
             await Task.Run(() => {
                 foreach (var path in metaFileSearcher.Search(FolderPath, FileNameFilterRegex))
@@ -42,8 +46,9 @@ namespace PrefabDocumenter
 
                             beforeElement.Add(new XElement("File",
                                 new XAttribute(XmlTags.FileNameAttrTag, fileName),
-                                Regex.IsMatch(fileName, MetaFileExtension) ? new XAttribute(XmlTags.FilePathAttrTag, relativePath) : null,
-                                Regex.IsMatch(fileName, MetaFileExtension) ? new XAttribute(XmlTags.GuidAttrTag, UnityMetaParser.Parse(new StreamReader(path).ReadToEnd()).Guid) : null
+                                Regex.IsMatch(fileName, metaFileExtension) ? new XAttribute(XmlTags.FilePathAttrTag, relativePath) : null,
+                                Regex.IsMatch(fileName, metaFileExtension) ? new XAttribute(XmlTags.GuidAttrTag, UnityMetaParser.Parse(new StreamReader(path).ReadToEnd()).Guid) : null,
+                                Regex.IsMatch(fileName, fileExtension) ? new XAttribute(XmlTags.Type, fileTypeValue) : new XAttribute(XmlTags.Type, folderTypeValue)
                                 ));
                         }
 
