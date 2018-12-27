@@ -16,11 +16,8 @@ namespace PrefabDocumenter
     /// </summary>
     public partial class MainWindow : Window
     {
-        private const string xmlFilter = "XML(*.xml)|*.xml|全てのファイル (*.*)|*.*";
         private CommonFileDialogFilter xmlCommonFilter = new CommonFileDialogFilter("XML", "xml");
-        private const string htmlFilter = "html(*.html)|*.html|全てのファイル (*.*)|*.*";
         private CommonFileDialogFilter htmlCommonFilter = new CommonFileDialogFilter("HTML", "html");
-        private const string dbFilter = "db(*.db)|*.db|全てのファイル (*.*)|*.*";
         private CommonFileDialogFilter dbCommonFilter = new CommonFileDialogFilter("DB", "db");
 
         private XElement loadFileTreeRootElement;
@@ -34,7 +31,7 @@ namespace PrefabDocumenter
         //<-MainWindow.xaml call functions
         private void TargetFolderPathInject(object sender, RoutedEventArgs e)
         {
-            FileDialog.OpenFolderDialog(out var path);
+            FileDialog.OpenSaveFolderDialog(out var path);
             TargetFolderPath.Text = path;
         }
 
@@ -42,7 +39,7 @@ namespace PrefabDocumenter
         {
             if (Directory.Exists(TargetFolderPath.Text) == false)
             {
-                MessageBox.Show("Target folder pathに正しいディレクトリを入力してください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(Properties.Resources.IncorrectTargetFolderPath, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -77,6 +74,11 @@ namespace PrefabDocumenter
             if (!result)
             {
                 return;
+            }
+
+            if (File.Exists(path))
+            {
+
             }
 
             ToggleAllButtonEnabled(false);
@@ -115,7 +117,7 @@ namespace PrefabDocumenter
         {
             if (loadFileTreeRootElement == null)
             {
-                MessageBox.Show("File tree xmlを読み込んでください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(Properties.Resources.FileTreeXMLNotLoad, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -129,7 +131,7 @@ namespace PrefabDocumenter
             {
                 ToggleAllButtonEnabled(false);
 
-                var xDoc = await XmlDocument.CreateDraftDocument(loadFileTreeRootElement.DescendantsAndSelf().Where(element => element.Attribute("Guid") != null));
+                var xDoc = await XmlDocument.CreateDraftDocument(loadFileTreeRootElement.DescendantsAndSelf().Where(element => element.Attribute(XmlTags.GuidAttrTag) != null));
 
                 await Task.Run(() => {
                     xDoc.Save(fs);
@@ -148,7 +150,7 @@ namespace PrefabDocumenter
         {
             if (loadFileTreeRootElement == null)
             {
-                MessageBox.Show("File tree xmlを読み込んでください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(Properties.Resources.FileTreeXMLNotLoad, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -186,7 +188,7 @@ namespace PrefabDocumenter
         {
             if (loadDraftDocRootElement == null || loadFileTreeRootElement == null)
             {
-                MessageBox.Show("File tree xmlとDraft documentを読み込んでください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(Properties.Resources.FileTreeAndDraftNotLoad, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -243,7 +245,7 @@ namespace PrefabDocumenter
             switch (result)
             {
                 case CommonFileDialogResult.None:
-                    MessageBox.Show("正しいファイルを入力してください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(Properties.Resources.IncorrectFile, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     FileName = "";
                     return false;
                 case CommonFileDialogResult.Cancel:
@@ -268,7 +270,7 @@ namespace PrefabDocumenter
             switch (result)
             {
                 case CommonFileDialogResult.None:
-                    MessageBox.Show("正しいパスを入力してください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(Properties.Resources.IncorrectPath, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     FileName = "";
                     return false;
                 case CommonFileDialogResult.Cancel:
@@ -280,9 +282,9 @@ namespace PrefabDocumenter
             return true;
         }
 
-        internal static bool OpenFolderDialog(out string FileName)
+        internal static bool OpenSaveFolderDialog(out string FileName)
         {
-            var dialog = new CommonOpenFileDialog("保存フォルダ選択") {
+            var dialog = new CommonOpenFileDialog(Properties.Resources.SaveFolderSelectDialogTitle) {
                 IsFolderPicker = true
             };
 
@@ -291,7 +293,7 @@ namespace PrefabDocumenter
             switch (result)
             {
                 case CommonFileDialogResult.None:
-                    MessageBox.Show("正しいパスを入力してください。", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(Properties.Resources.IncorrectPath, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     FileName = "";
                     return false;
                 case CommonFileDialogResult.Cancel:

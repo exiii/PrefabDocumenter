@@ -59,5 +59,68 @@ namespace PrefabDocumenter.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   エラー に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string Error {
+            get {
+                return ResourceManager.GetString("Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   File tree xmlとDraft documentを読み込んでください。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string FileTreeAndDraftNotLoad {
+            get {
+                return ResourceManager.GetString("FileTreeAndDraftNotLoad", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   File tree xmlを読み込んでください。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string FileTreeXMLNotLoad {
+            get {
+                return ResourceManager.GetString("FileTreeXMLNotLoad", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   正しいファイルを入力してください。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string IncorrectFile {
+            get {
+                return ResourceManager.GetString("IncorrectFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   正しいパスを入力してください。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string IncorrectPath {
+            get {
+                return ResourceManager.GetString("IncorrectPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Target folder pathに正しいディレクトリを入力してください。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string IncorrectTargetFolderPath {
+            get {
+                return ResourceManager.GetString("IncorrectTargetFolderPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   保存フォルダ選択 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string SaveFolderSelectDialogTitle {
+            get {
+                return ResourceManager.GetString("SaveFolderSelectDialogTitle", resourceCulture);
+            }
+        }
     }
 }
