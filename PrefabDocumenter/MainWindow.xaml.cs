@@ -78,7 +78,8 @@ namespace PrefabDocumenter
 
             if (File.Exists(path))
             {
-
+                MessageBox.Show(Properties.Resources.IncorrectFile, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
             }
 
             ToggleAllButtonEnabled(false);
