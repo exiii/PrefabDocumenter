@@ -6,15 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using YamlDotNet;
 using YamlDotNet.RepresentationModel;
-using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
 
 namespace exiii
 {
     static class UnityMetaParser
     {
-        const string guidKey = "guid";
-
         /// <summary>
         /// FileFormatVersion, FolderAsset, TimeCreated and LicenseType isn't available.
         /// </summary>
@@ -27,7 +23,7 @@ namespace exiii
             yaml.Load(stringReader);
 
             var mapping = (YamlMappingNode)yaml.Documents[0].RootNode;
-            var guid = (YamlScalarNode)mapping.Children[new YamlScalarNode(guidKey)];
+            var guid = (YamlScalarNode)mapping.Children[new YamlScalarNode(UnityMetaNodeKey.Guid)];
 
             return new UnityMetaNode("", guid.Value, "", "", "");
         }
@@ -49,5 +45,10 @@ namespace exiii
             this.TimeCreated = TimeCreated;
             this.LicenseType = LicenseType;
         }
+    }
+
+    class UnityMetaNodeKey
+    {
+        public const string Guid = "guid";
     }
 }

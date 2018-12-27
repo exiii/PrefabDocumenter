@@ -11,13 +11,6 @@ namespace PrefabDocumenter
 {
     public static class FileTreeXml
     {
-        private const string pathSplitToken = @"\\";
-        private const string metaFileExtension = @".*\.meta$";
-        private const string fileExtension = @".+\..+$";
-
-        private const string fileTypeValue = "File";
-        private const string folderTypeValue = "Folder";
-
         /// <summary>
         /// 
         /// </summary>
@@ -26,7 +19,7 @@ namespace PrefabDocumenter
         {
             var metaFileTreeXml = new XElement(XmlTags.MetaFilesTag, new XAttribute(XmlTags.SelectFolderPathAttrTag, FolderPath));
 
-            var metaFileSearcher = new FileSearcher(metaFileExtension);
+            var metaFileSearcher = new FileSearcher(RegexTokens.MetaFileExtension);
 
             await Task.Run(() => {
                 foreach (var path in metaFileSearcher.Search(FolderPath, FileNameFilterRegex))
@@ -34,7 +27,7 @@ namespace PrefabDocumenter
                     var relativePath = Regex.Replace(path, Regex.Escape(FolderPath), "");
 
                     var beforeElement = metaFileTreeXml;
-                    foreach (var fileName in Regex.Split(relativePath, pathSplitToken))
+                    foreach (var fileName in Regex.Split(relativePath, RegexTokens.PathSplit))
                     {
                         if (fileName == "") 
                         {
@@ -46,9 +39,9 @@ namespace PrefabDocumenter
 
                             beforeElement.Add(new XElement("File",
                                 new XAttribute(XmlTags.FileNameAttrTag, fileName),
-                                Regex.IsMatch(fileName, metaFileExtension) ? new XAttribute(XmlTags.FilePathAttrTag, relativePath) : null,
-                                Regex.IsMatch(fileName, metaFileExtension) ? new XAttribute(XmlTags.GuidAttrTag, UnityMetaParser.Parse(new StreamReader(path).ReadToEnd()).Guid) : null,
-                                Regex.IsMatch(fileName, fileExtension) ? new XAttribute(XmlTags.Type, fileTypeValue) : new XAttribute(XmlTags.Type, folderTypeValue)
+                                Regex.IsMatch(fileName, RegexTokens.MetaFileExtension) ? new XAttribute(XmlTags.FilePathAttrTag, relativePath) : null,
+                                Regex.IsMatch(fileName, RegexTokens.MetaFileExtension) ? new XAttribute(XmlTags.GuidAttrTag, UnityMetaParser.Parse(new StreamReader(path).ReadToEnd()).Guid) : null,
+                                Regex.IsMatch(fileName, RegexTokens.FileExtension) ? new XAttribute(XmlTags.Type, FileTypeValue.File) : new XAttribute(XmlTags.Type, FileTypeValue.Folder)
                                 ));
                         }
 
