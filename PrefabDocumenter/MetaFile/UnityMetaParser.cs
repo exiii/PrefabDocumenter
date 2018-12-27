@@ -12,10 +12,10 @@ namespace PrefabDocumenter
     public static class UnityMetaParser
     {
         /// <summary>
-        /// FileFormatVersion, FolderAsset, TimeCreated and LicenseType isn't available.
+        ///
         /// </summary>
         /// <param name="TargetSrting"></param>
-        public static UnityMetaNode Parse(string TargetSrting)
+        public static UnityMeta Parse(string TargetSrting)
         {
             var stringReader = new StringReader(TargetSrting);
             var yaml = new YamlStream();
@@ -23,10 +23,21 @@ namespace PrefabDocumenter
             yaml.Load(stringReader);
 
             var mapping = (YamlMappingNode)yaml.Documents[0].RootNode;
-            var guid = (YamlScalarNode)mapping.Children[new YamlScalarNode(UnityMetaKey.Guid)];
-            var folderAsset = (YamlScalarNode)mapping.Children[new YamlScalarNode(UnityMetaKey.FolderAsset)];
+            var fileFormatVerGetResult = mapping.Children.TryGetValue(new YamlScalarNode(UnityMetaKey.FileFormatVersion), out var fileFormatVerNode);
+            var guidNode = mapping.Children[new YamlScalarNode(UnityMetaKey.Guid)];
+            var folderAssetGetResult = mapping.Children.TryGetValue(new YamlScalarNode(UnityMetaKey.FolderAsset), out var folderAssetNode);
 
-            return new UnityMetaNode("", guid.Value, folderAsset.Value, "", "");
+            var fileFormatVerValue = fileFormatVerGetResult ?
+                ((YamlScalarNode)fileFormatVerNode).Value :
+                "";
+
+            var guidValue = ((YamlScalarNode)guidNode).Value;
+
+            var folderAssetValue = folderAssetGetResult ?
+                ((YamlScalarNode)folderAssetNode).Value :
+                "";
+
+            return new UnityMeta(fileFormatVerValue, guidValue, folderAssetValue);
         }
     }
 }
