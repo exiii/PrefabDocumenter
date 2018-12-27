@@ -9,7 +9,7 @@ using System.Reflection;
 
 namespace PrefabDocumenter
 {
-    public class SqlDbProvider<T> where T : IModel
+    public class SqlDbProvider<T> : IDisposable where T : IModel
     {
         private string dbFilePath;
         private SQLiteConnectionStringBuilder sqlConnSB;
@@ -62,7 +62,7 @@ namespace PrefabDocumenter
             }
         }
 
-        ~SqlDbProvider()
+        public void Dispose()
         {
             dbConnecter.Dispose();
         }
