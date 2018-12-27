@@ -73,7 +73,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DB\Model\PrefabDocumentModel.cs" />
-    <Compile Include="DB\Model\interface\IModel.cs" />
+    <Compile Include="DB\Model\Interface\IModel.cs" />
     <Compile Include="DB\SqlDbProvider.cs" />
     <Compile Include="MetaFile\FileSearcher.cs" />
     <Compile Include="MetaFile\ConstantClass\UnityMetaKey.cs" />
