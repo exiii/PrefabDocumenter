@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using YamlDotNet;
 using YamlDotNet.RepresentationModel;
 
-namespace exiii
+namespace PrefabDocumenter
 {
-    static class UnityMetaParser
+    public static class UnityMetaParser
     {
         /// <summary>
         /// FileFormatVersion, FolderAsset, TimeCreated and LicenseType isn't available.
@@ -23,32 +23,10 @@ namespace exiii
             yaml.Load(stringReader);
 
             var mapping = (YamlMappingNode)yaml.Documents[0].RootNode;
-            var guid = (YamlScalarNode)mapping.Children[new YamlScalarNode(UnityMetaNodeKey.Guid)];
+            var guid = (YamlScalarNode)mapping.Children[new YamlScalarNode(UnityMetaKey.Guid)];
+            var folderAsset = (YamlScalarNode)mapping.Children[new YamlScalarNode(UnityMetaKey.FolderAsset)];
 
-            return new UnityMetaNode("", guid.Value, "", "", "");
+            return new UnityMetaNode("", guid.Value, folderAsset.Value, "", "");
         }
-    }
-
-    class UnityMetaNode
-    {
-        public string FileFormatVersion { private set; get; }
-        public string Guid { private set; get; }
-        public string FolderAsset { private set; get; }
-        public string TimeCreated { private set; get; }
-        public string LicenseType { private set; get; }
-
-        public UnityMetaNode(string FileFormatVersion, string Guid, string FolderAsset, string TimeCreated, string LicenseType)
-        {
-            this.FileFormatVersion = FileFormatVersion;
-            this.Guid = Guid;
-            this.FolderAsset = FolderAsset;
-            this.TimeCreated = TimeCreated;
-            this.LicenseType = LicenseType;
-        }
-    }
-
-    class UnityMetaNodeKey
-    {
-        public const string Guid = "guid";
     }
 }

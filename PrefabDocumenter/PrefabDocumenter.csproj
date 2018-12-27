@@ -76,6 +76,8 @@
     <Compile Include="DB\Model\interface\IModel.cs" />
     <Compile Include="DB\SqlDbProvider.cs" />
     <Compile Include="MetaFile\FileSearcher.cs" />
+    <Compile Include="MetaFile\ConstantClass\UnityMetaKey.cs" />
+    <Compile Include="MetaFile\UnityMetaNode.cs" />
     <Compile Include="MetaFile\UnityMetaParser.cs" />
     <Compile Include="XML\FileTreeXml.cs" />
     <Compile Include="XML\ConstantClass\FileTypeValue.cs" />
