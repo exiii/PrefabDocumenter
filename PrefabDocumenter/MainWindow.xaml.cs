@@ -33,7 +33,7 @@ namespace PrefabDocumenter
         //<-MainWindow.xaml call functions
         private void TargetFolderPathInject(object sender, RoutedEventArgs e)
         {
-            FileDialog.OpenSaveFolderDialog(out var path);
+            FileDialog.Open(new CommonOpenFileDialog(Properties.Resources.SaveFolderSelectDialogTitle) { IsFolderPicker = true }, out var path);
             TargetFolderPath.Text = path;
         }
 
@@ -45,7 +45,7 @@ namespace PrefabDocumenter
                 return;
             }
 
-            var result = FileDialog.SaveFileDialog(xmlCommonFilter, out var path);
+            var result = FileDialog.Open(new CommonSaveFileDialog(), out var path, xmlCommonFilter);
             if (!result)
             {
                 return;
@@ -72,7 +72,7 @@ namespace PrefabDocumenter
         private async void LoadXmlFile(object sender, RoutedEventArgs e)
         {
 
-            var result = FileDialog.OpenFileDialog(xmlCommonFilter, out var path);
+            var result = FileDialog.Open(new CommonOpenFileDialog(), out var path, xmlCommonFilter);
             if (!result)
             {
                 return;
@@ -98,7 +98,7 @@ namespace PrefabDocumenter
 
         private async void LoadDraftDocument(object sender, RoutedEventArgs e)
         {
-            var result = FileDialog.OpenFileDialog(xmlCommonFilter, out var path);
+            var result = FileDialog.Open(new CommonOpenFileDialog(), out var path, xmlCommonFilter);
             if (!result)
             {
                 return;
@@ -124,7 +124,7 @@ namespace PrefabDocumenter
                 return;
             }
 
-            var result = FileDialog.SaveFileDialog(xmlCommonFilter, out var path);
+            var result = FileDialog.Open(new CommonSaveFileDialog(), out var path, xmlCommonFilter);
             if (!result)
             {
                 return;
@@ -157,7 +157,7 @@ namespace PrefabDocumenter
                 return;
             }
 
-            var result = FileDialog.OpenFileDialog(xmlCommonFilter, out var path);
+            var result = FileDialog.Open(new CommonOpenFileDialog(), out var path, xmlCommonFilter);
             if (!result)
             {
                 return;
@@ -195,7 +195,7 @@ namespace PrefabDocumenter
                 return;
             }
 
-            var result = FileDialog.SaveFileDialog(dbCommonFilter, out var path);
+            var result = FileDialog.Open(new CommonSaveFileDialog(), out var path, dbCommonFilter);
             if (!result)
             {
                 return;
@@ -237,75 +237,26 @@ namespace PrefabDocumenter
 
     internal static class FileDialog
     {
-        internal static bool OpenFileDialog(CommonFileDialogFilter filter, out string FileName)
+        internal static bool Open(CommonFileDialog Dialog, out string FileName, CommonFileDialogFilter Filter = null)
         {
-            var dialog = new CommonOpenFileDialog();
+            if(Filter != null)
+            {
+                Dialog.Filters.Add(Filter);
+                //Dialog.AlwaysAppendDefaultExtension = true;
+                Dialog.DefaultExtension = Filter.Extensions.First();
+            }
 
-            dialog.Filters.Add(filter);
-
-            var result = dialog.ShowDialog();
+            var result = Dialog.ShowDialog();
 
             switch (result)
             {
-                case CommonFileDialogResult.None:
-                    MessageBox.Show(Properties.Resources.IncorrectFile, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    FileName = "";
-                    return false;
-                case CommonFileDialogResult.Cancel:
-                    FileName = "";
-                    return false;
+                case CommonFileDialogResult.Ok:
+                    FileName = Dialog.FileName;
+                    return true;
             }
 
-            FileName = dialog.FileName;
-            return true;
-        }
-
-        internal static bool SaveFileDialog(CommonFileDialogFilter filter, out string FileName)
-        {
-            var dialog = new CommonSaveFileDialog();
-
-            dialog.Filters.Add(filter);
-            dialog.AlwaysAppendDefaultExtension = true;
-            dialog.DefaultExtension = filter.Extensions.First();
-
-            var result = dialog.ShowDialog();
-
-            switch (result)
-            {
-                case CommonFileDialogResult.None:
-                    MessageBox.Show(Properties.Resources.IncorrectPath, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    FileName = "";
-                    return false;
-                case CommonFileDialogResult.Cancel:
-                    FileName = "";
-                    return false;
-            }
-
-            FileName = dialog.FileName;
-            return true;
-        }
-
-        internal static bool OpenSaveFolderDialog(out string FileName)
-        {
-            var dialog = new CommonOpenFileDialog(Properties.Resources.SaveFolderSelectDialogTitle) {
-                IsFolderPicker = true
-            };
-
-            var result = dialog.ShowDialog();
-
-            switch (result)
-            {
-                case CommonFileDialogResult.None:
-                    MessageBox.Show(Properties.Resources.IncorrectPath, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    FileName = "";
-                    return false;
-                case CommonFileDialogResult.Cancel:
-                    FileName = "";
-                    return false;
-            }
-
-            FileName = dialog.FileName;
-            return true;
+            FileName = "";
+            return false;
         }
     }
 }
