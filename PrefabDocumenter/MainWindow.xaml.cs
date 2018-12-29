@@ -8,6 +8,8 @@ using System.Windows;
 using System.Xml.Linq;
 using System.Windows.Controls;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using PrefabDocumenter.Xml;
+using PrefabDocumenter.Db;
 
 namespace PrefabDocumenter
 {
