@@ -85,13 +85,13 @@ namespace PrefabDocumenter.Db
 
                     foreach (var descriptionElement in enableDrafts) {
                         MetaFileElements.DescendantsAndSelf()
-                                        .Where(metaElement => metaElement.Attribute(XmlTags.GuidAttrTag) != null)
-                                        .Where(metaElement => metaElement.Attribute(XmlTags.GuidAttrTag).Value == descriptionElement.Attribute(XmlTags.GuidAttrTag).Value)
+                                        .Where(metaElement => metaElement.Attribute(XmlTags.GuidAttr) != null)
+                                        .Where(metaElement => metaElement.Attribute(XmlTags.GuidAttr).Value == descriptionElement.Attribute(XmlTags.GuidAttr).Value)
                                         .ToList()
                                         .ForEach(element => {
-                                            string guid = element.Attribute(XmlTags.GuidAttrTag).Value;
-                                            string fileName = Regex.Replace(descriptionElement.Attribute(XmlTags.FileNameAttrTag).Value, ".meta$", "");
-                                            string filePath = Regex.Replace(element.Attribute(XmlTags.FilePathAttrTag).Value, ".meta$", ""); ;
+                                            string guid = element.Attribute(XmlTags.GuidAttr).Value;
+                                            string fileName = Regex.Replace(descriptionElement.Attribute(XmlTags.FileNameAttr).Value, ".meta$", "");
+                                            string filePath = Regex.Replace(element.Attribute(XmlTags.FilePathAttr).Value, ".meta$", ""); ;
                                             string description = descriptionElement.Descendants(XmlTags.DescriptionTag).First().Value;
                                             int indentLevel = element.Ancestors().Count() - 2;
 

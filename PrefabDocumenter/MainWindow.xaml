@@ -16,7 +16,7 @@
         </Style>
         <HierarchicalDataTemplate x:Key="XmlTemplate" ItemsSource="{Binding Elements, IsAsync=True}">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Name="nameTextBlock" Text="{Binding Path=Attribute[FileName], IsAsync=True}"/>
+                <TextBlock Name="nameTextBlock" Text="{Binding Path=Attribute[Name], IsAsync=True}"/>
                 <TextBlock Name="guidTextBlock" Text="{Binding Path=Attribute[Guid], IsAsync=True}" FontWeight="Bold" Margin="5,0"/>
                 <TextBlock Name="valueTextBlock" FontWeight="Bold" Margin="5,0" />
             </StackPanel>

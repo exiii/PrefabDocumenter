@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PrefabDocumenter.Xml
+﻿namespace PrefabDocumenter.Xml
 {
     public static class XmlTags
     {
-        public const string FilePathAttrTag = "FilePath";
-        public const string FileNameAttrTag = "FileName";
-        public const string GuidAttrTag = "Guid";
         public const string DescriptionTag = "Description";
-        public const string MetaFileTag = "MetaFile";
         public const string MetaFilesTag = "MetaFiles";
-        public const string SelectFolderPathAttrTag = "SelectFolderPath";
-        public const string Type = "Type";
+        public const string MetaFileTag = "MetaFile";
+        public const string FileTag = "File";
+        public const string SelectFolderPathAttr = "SelectFolderPath";
+        public const string FilePathAttr = "Path";
+        public const string FileNameAttr = "Name";
+        public const string GuidAttr = "Guid";
+        public const string TypeAttr = "Type";
     }
 }

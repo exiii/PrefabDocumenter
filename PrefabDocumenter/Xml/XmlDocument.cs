@@ -24,8 +24,8 @@ namespace PrefabDocumenter.Xml
                 foreach (var element in MetaFileElement)
                 {
                     draftDocument.Add(new XElement(XmlTags.MetaFileTag,
-                        new XAttribute(XmlTags.FileNameAttrTag, Regex.Split(element.Attribute(XmlTags.FilePathAttrTag).Value.ToString(), @"\\").Last()),
-                        new XAttribute(XmlTags.GuidAttrTag, element.Attribute(XmlTags.GuidAttrTag).Value),
+                        new XAttribute(XmlTags.FileNameAttr, Regex.Split(element.Attribute(XmlTags.FilePathAttr).Value.ToString(), @"\\").Last()),
+                        new XAttribute(XmlTags.GuidAttr, element.Attribute(XmlTags.GuidAttr).Value),
                         new XElement(XmlTags.DescriptionTag)));
                 }
             });
@@ -38,7 +38,7 @@ namespace PrefabDocumenter.Xml
             var newDraftDocument = new XElement(XmlTags.MetaFilesTag);
 
             MetaFileElement = MetaFileElement.DescendantsAndSelf()
-                                             .Where(element => element.Attribute(XmlTags.GuidAttrTag) != null);
+                                             .Where(element => element.Attribute(XmlTags.GuidAttr) != null);
 
             await Task.Run(() =>
             {
@@ -47,20 +47,20 @@ namespace PrefabDocumenter.Xml
                     foreach (var metaElement in MetaFileElement) 
                     {
                         DraftDocumentElement.DescendantsAndSelf()
-                                            .Where(draftElement => draftElement.Attribute(XmlTags.GuidAttrTag) != null)
-                                            .Where(draftElement => draftElement.Attribute(XmlTags.GuidAttrTag).Value == metaElement.Attribute(XmlTags.GuidAttrTag).Value)
+                                            .Where(draftElement => draftElement.Attribute(XmlTags.GuidAttr) != null)
+                                            .Where(draftElement => draftElement.Attribute(XmlTags.GuidAttr).Value == metaElement.Attribute(XmlTags.GuidAttr).Value)
                                             .ToList()
                                             .ForEach(draftElement => newDraftDocument.Add(draftElement));
 
                         var Exist = DraftDocumentElement.DescendantsAndSelf()
-                                                        .Where(draftElement => draftElement.Attribute(XmlTags.GuidAttrTag) != null)
-                                                        .Where(draftElement => draftElement.Attribute(XmlTags.GuidAttrTag).Value == metaElement.Attribute(XmlTags.GuidAttrTag).Value)
+                                                        .Where(draftElement => draftElement.Attribute(XmlTags.GuidAttr) != null)
+                                                        .Where(draftElement => draftElement.Attribute(XmlTags.GuidAttr).Value == metaElement.Attribute(XmlTags.GuidAttr).Value)
                                                         .Any();
                         if (!Exist) 
                         {
                             newDraftDocument.Add(new XElement(XmlTags.MetaFileTag,
-                                        new XAttribute(XmlTags.FileNameAttrTag, Regex.Split(metaElement.Attribute(XmlTags.FilePathAttrTag).Value.ToString(), @"\\").Last()),
-                                        new XAttribute(XmlTags.GuidAttrTag, metaElement.Attribute(XmlTags.GuidAttrTag).Value),
+                                        new XAttribute(XmlTags.FileNameAttr, Regex.Split(metaElement.Attribute(XmlTags.FilePathAttr).Value.ToString(), @"\\").Last()),
+                                        new XAttribute(XmlTags.GuidAttr, metaElement.Attribute(XmlTags.GuidAttr).Value),
                                         new XElement(XmlTags.DescriptionTag)));
                         }
                     }

@@ -134,7 +134,7 @@ namespace PrefabDocumenter
             {
                 ToggleAllButtonEnabled(false);
 
-                var xDoc = await XmlDocument.CreateDraftDocument(loadFileTreeRootElement.DescendantsAndSelf().Where(element => element.Attribute(XmlTags.GuidAttrTag) != null));
+                var xDoc = await XmlDocument.CreateDraftDocument(loadFileTreeRootElement.DescendantsAndSelf().Where(element => element.Attribute(XmlTags.GuidAttr) != null));
 
                 await Task.Run(() => {
                     xDoc.Save(fs);
