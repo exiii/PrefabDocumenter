@@ -78,9 +78,9 @@ namespace PrefabDocumenter
                 return;
             }
 
-            if (File.Exists(path))
+            if (!File.Exists(path))
             {
-                MessageBox.Show(Properties.Resources.IncorrectFile, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(Properties.Resources.IncorrectPath, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
