@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using YamlDotNet;
 using YamlDotNet.RepresentationModel;
 
-namespace PrefabDocumenter
+namespace PrefabDocumenter.MetaFile
 {
     public static class UnityMetaParser
     {

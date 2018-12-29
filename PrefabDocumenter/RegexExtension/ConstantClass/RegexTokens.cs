@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PrefabDocumenter
+namespace PrefabDocumenter.RegexExtension
 {
     public static class RegexTokens
     {

@@ -1,4 +1,4 @@
-﻿namespace PrefabDocumenter
+﻿namespace PrefabDocumenter.MetaFile
 {
     public static class UnityMetaKey
     {

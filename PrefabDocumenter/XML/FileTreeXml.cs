@@ -5,8 +5,10 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using PrefabDocumenter.RegexExtension;
+using PrefabDocumenter.MetaFile;
 
-namespace PrefabDocumenter
+namespace PrefabDocumenter.Xml
 {
     public static class FileTreeXml
     {

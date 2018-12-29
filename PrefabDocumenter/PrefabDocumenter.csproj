@@ -72,18 +72,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="DB\Model\PrefabDocumentModel.cs" />
-    <Compile Include="DB\Model\Interface\IModel.cs" />
-    <Compile Include="DB\SqlDbProvider.cs" />
+    <Compile Include="Db\Model\PrefabDocumentModel.cs" />
+    <Compile Include="Db\Model\Interface\IModel.cs" />
+    <Compile Include="Db\SqlDbProvider.cs" />
     <Compile Include="MetaFile\FileSearcher.cs" />
     <Compile Include="MetaFile\ConstantClass\UnityMetaKey.cs" />
     <Compile Include="MetaFile\UnityMetaNode.cs" />
     <Compile Include="MetaFile\UnityMetaParser.cs" />
-    <Compile Include="XML\FileTreeXml.cs" />
-    <Compile Include="XML\ConstantClass\FileTypeValue.cs" />
-    <Compile Include="Regex\ConstantClass\RegexTokens.cs" />
-    <Compile Include="XML\XmlDocument.cs" />
-    <Compile Include="XML\ConstantClass\XmlTags.cs" />
+    <Compile Include="Xml\FileTreeXml.cs" />
+    <Compile Include="Xml\ConstantClass\FileTypeValue.cs" />
+    <Compile Include="RegexExtension\ConstantClass\RegexTokens.cs" />
+    <Compile Include="Xml\XmlDocument.cs" />
+    <Compile Include="Xml\ConstantClass\XmlTags.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

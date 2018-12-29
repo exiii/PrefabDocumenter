@@ -1,4 +1,4 @@
-﻿namespace PrefabDocumenter
+﻿namespace PrefabDocumenter.Xml
 {
     public static class FileTypeValue
     {

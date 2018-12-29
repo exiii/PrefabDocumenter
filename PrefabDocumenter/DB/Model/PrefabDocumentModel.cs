@@ -5,8 +5,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using PrefabDocumenter.Xml;
 
-namespace PrefabDocumenter
+namespace PrefabDocumenter.Db
 {
     class PrefabDocumentModel : IModel
     {

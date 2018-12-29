@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Data.SQLite;
 
-namespace PrefabDocumenter
+namespace PrefabDocumenter.Db
 {
     public class SqlDbProvider<T> : IDisposable where T : IModel
     {
