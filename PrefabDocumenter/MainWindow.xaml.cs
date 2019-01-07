@@ -123,7 +123,7 @@ namespace PrefabDocumenter
         {
             if (loadFileTreeRootElement == null)
             {
-                MessageBox.Show(Properties.Resources.FileTreeXMLNotLoad, Properties.Resources.Error, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(Properties.Resources.FileTreeXMLNotLoaded, Properties.Resources.Error, MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -157,7 +157,7 @@ namespace PrefabDocumenter
         {
             if (loadFileTreeRootElement == null)
             {
-                MessageBox.Show(Properties.Resources.FileTreeXMLNotLoad, Properties.Resources.Error, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(Properties.Resources.FileTreeXMLNotLoaded, Properties.Resources.Error, MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -194,7 +194,7 @@ namespace PrefabDocumenter
         {
             if (loadDraftDocRootElement == null || loadFileTreeRootElement == null)
             {
-                MessageBox.Show(Properties.Resources.FileTreeAndDraftNotLoad, Properties.Resources.Error, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(Properties.Resources.FileTreeAndDraftNotLoaded, Properties.Resources.Error, MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 

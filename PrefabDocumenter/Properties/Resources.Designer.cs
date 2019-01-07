@@ -22,7 +22,7 @@ namespace PrefabDocumenter.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace PrefabDocumenter.Properties {
         ///   このクラスで使用されているキャッシュされた ResourceManager インスタンスを返します。
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("PrefabDocumenter.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace PrefabDocumenter.Properties {
         ///   現在のスレッドの CurrentUICulture プロパティをオーバーライドします。
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -61,36 +61,90 @@ namespace PrefabDocumenter.Properties {
         }
         
         /// <summary>
+        ///   Create database に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string CreateDataBaseButtonLabel {
+            get {
+                return ResourceManager.GetString("CreateDataBaseButtonLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Create draft document に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string CreateDraftDocumentButtonLabel {
+            get {
+                return ResourceManager.GetString("CreateDraftDocumentButtonLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Create file tree XML に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string CreateFileTreeXmlButtonLabel {
+            get {
+                return ResourceManager.GetString("CreateFileTreeXmlButtonLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Draft document tree view に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string DraftDocumentTreeViewLabel {
+            get {
+                return ResourceManager.GetString("DraftDocumentTreeViewLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   エラー に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string Error {
+        public static string Error {
             get {
                 return ResourceManager.GetString("Error", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Filename filter regex に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string FileNameFilterRegexLabel {
+            get {
+                return ResourceManager.GetString("FileNameFilterRegexLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   File tree xmlとDraft documentを読み込んでください。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string FileTreeAndDraftNotLoad {
+        public static string FileTreeAndDraftNotLoaded {
             get {
-                return ResourceManager.GetString("FileTreeAndDraftNotLoad", resourceCulture);
+                return ResourceManager.GetString("FileTreeAndDraftNotLoaded", resourceCulture);
             }
         }
         
         /// <summary>
         ///   File tree xmlを読み込んでください。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string FileTreeXMLNotLoad {
+        public static string FileTreeXMLNotLoaded {
             get {
-                return ResourceManager.GetString("FileTreeXMLNotLoad", resourceCulture);
+                return ResourceManager.GetString("FileTreeXMLNotLoaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   ... に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string HorizontalEllipsis {
+            get {
+                return ResourceManager.GetString("HorizontalEllipsis", resourceCulture);
             }
         }
         
         /// <summary>
         ///   正しいファイルを入力してください。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string IncorrectFile {
+        public static string IncorrectFile {
             get {
                 return ResourceManager.GetString("IncorrectFile", resourceCulture);
             }
@@ -99,7 +153,7 @@ namespace PrefabDocumenter.Properties {
         /// <summary>
         ///   正しいパスを入力してください。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string IncorrectPath {
+        public static string IncorrectPath {
             get {
                 return ResourceManager.GetString("IncorrectPath", resourceCulture);
             }
@@ -108,18 +162,63 @@ namespace PrefabDocumenter.Properties {
         /// <summary>
         ///   Target folder pathに正しいディレクトリを入力してください。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string IncorrectTargetFolderPath {
+        public static string IncorrectTargetFolderPath {
             get {
                 return ResourceManager.GetString("IncorrectTargetFolderPath", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Load draft document に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string LoadDraftDocumentButtonLabel {
+            get {
+                return ResourceManager.GetString("LoadDraftDocumentButtonLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Load file tree XML に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string LoadXmlFileButtonLabel {
+            get {
+                return ResourceManager.GetString("LoadXmlFileButtonLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Meta file tree view に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MetaFileTreeViewLabel {
+            get {
+                return ResourceManager.GetString("MetaFileTreeViewLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   保存フォルダ選択 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string SaveFolderSelectDialogTitle {
+        public static string SaveFolderSelectDialogTitle {
             get {
                 return ResourceManager.GetString("SaveFolderSelectDialogTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Target folder path に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string TargetFolderPathLabel {
+            get {
+                return ResourceManager.GetString("TargetFolderPathLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Update draft document に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string UpdateDraftDocumentButtonLabel {
+            get {
+                return ResourceManager.GetString("UpdateDraftDocumentButtonLabel", resourceCulture);
             }
         }
     }

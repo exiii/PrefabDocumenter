@@ -117,14 +117,32 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CreateDataBaseButtonLabel" xml:space="preserve">
+    <value>Create database</value>
+  </data>
+  <data name="CreateDraftDocumentButtonLabel" xml:space="preserve">
+    <value>Create draft document</value>
+  </data>
+  <data name="CreateFileTreeXmlButtonLabel" xml:space="preserve">
+    <value>Create file tree XML</value>
+  </data>
+  <data name="DraftDocumentTreeViewLabel" xml:space="preserve">
+    <value>Draft document tree view</value>
+  </data>
   <data name="Error" xml:space="preserve">
     <value>エラー</value>
   </data>
-  <data name="FileTreeAndDraftNotLoad" xml:space="preserve">
+  <data name="FileNameFilterRegexLabel" xml:space="preserve">
+    <value>Filename filter regex</value>
+  </data>
+  <data name="FileTreeAndDraftNotLoaded" xml:space="preserve">
     <value>File tree xmlとDraft documentを読み込んでください。</value>
   </data>
-  <data name="FileTreeXMLNotLoad" xml:space="preserve">
+  <data name="FileTreeXMLNotLoaded" xml:space="preserve">
     <value>File tree xmlを読み込んでください。</value>
+  </data>
+  <data name="HorizontalEllipsis" xml:space="preserve">
+    <value>...</value>
   </data>
   <data name="IncorrectFile" xml:space="preserve">
     <value>正しいファイルを入力してください。</value>
@@ -135,7 +153,22 @@
   <data name="IncorrectTargetFolderPath" xml:space="preserve">
     <value>Target folder pathに正しいディレクトリを入力してください。</value>
   </data>
+  <data name="LoadDraftDocumentButtonLabel" xml:space="preserve">
+    <value>Load draft document</value>
+  </data>
+  <data name="LoadXmlFileButtonLabel" xml:space="preserve">
+    <value>Load file tree XML</value>
+  </data>
+  <data name="MetaFileTreeViewLabel" xml:space="preserve">
+    <value>Meta file tree view</value>
+  </data>
   <data name="SaveFolderSelectDialogTitle" xml:space="preserve">
     <value>保存フォルダ選択</value>
+  </data>
+  <data name="TargetFolderPathLabel" xml:space="preserve">
+    <value>Target folder path</value>
+  </data>
+  <data name="UpdateDraftDocumentButtonLabel" xml:space="preserve">
+    <value>Update draft document</value>
   </data>
 </root>
