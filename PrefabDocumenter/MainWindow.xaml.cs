@@ -37,8 +37,8 @@ namespace PrefabDocumenter
             var pathOption = Optional.Return(FileDialog.Open(new CommonOpenFileDialog(Properties.Resources.SaveFolderSelectDialogTitle) { IsFolderPicker = true }));
 
             pathOption.Match(
-                value => TargetFolderPath.Text = value, 
-                () => TargetFolderPath.Text = "");
+                value => TargetFolderPath.Text = value,
+                () => { });
         }
 
         private async void CreateTreeFile(object sender, RoutedEventArgs e)
