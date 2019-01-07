@@ -250,7 +250,13 @@ namespace PrefabDocumenter
 
             var result = Dialog.ShowDialog();
 
-            return Dialog.FileName;
+            switch (result)
+            {
+                case CommonFileDialogResult.Ok:
+                    return Dialog.FileName;
+            }
+
+            return null;
         }
     }
 }
