@@ -45,7 +45,7 @@ namespace PrefabDocumenter
         {
             if (Directory.Exists(TargetFolderPath.Text) == false)
             {
-                MessageBox.Show(Properties.Resources.IncorrectTargetFolderPath, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(Properties.Resources.IncorrectTargetFolderPath, Properties.Resources.Error, MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -70,8 +70,6 @@ namespace PrefabDocumenter
                 }
             }, 
             () => { });
-
-
         }
 
         private async void LoadXmlFile(object sender, RoutedEventArgs e)
@@ -81,7 +79,7 @@ namespace PrefabDocumenter
             pathOption.Match(async value => {
                 if (!File.Exists(value))
                 {
-                    MessageBox.Show(Properties.Resources.IncorrectPath, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(Properties.Resources.IncorrectPath, Properties.Resources.Error, MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
@@ -95,9 +93,8 @@ namespace PrefabDocumenter
                 UpdateMetaFileTree(xDoc);
 
                 ToggleAllButtonEnabled(true);
-            }, () => { });
-
-
+            },
+            () => { });
         }
 
         private async void LoadDraftDocument(object sender, RoutedEventArgs e)
@@ -126,7 +123,7 @@ namespace PrefabDocumenter
         {
             if (loadFileTreeRootElement == null)
             {
-                MessageBox.Show(Properties.Resources.FileTreeXMLNotLoad, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(Properties.Resources.FileTreeXMLNotLoad, Properties.Resources.Error, MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -160,7 +157,7 @@ namespace PrefabDocumenter
         {
             if (loadFileTreeRootElement == null)
             {
-                MessageBox.Show(Properties.Resources.FileTreeXMLNotLoad, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(Properties.Resources.FileTreeXMLNotLoad, Properties.Resources.Error, MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -197,7 +194,7 @@ namespace PrefabDocumenter
         {
             if (loadDraftDocRootElement == null || loadFileTreeRootElement == null)
             {
-                MessageBox.Show(Properties.Resources.FileTreeAndDraftNotLoad, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(Properties.Resources.FileTreeAndDraftNotLoad, Properties.Resources.Error, MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -254,17 +251,6 @@ namespace PrefabDocumenter
             var result = Dialog.ShowDialog();
 
             return Dialog.FileName;
-
-            /*
-            switch (result)
-            {
-                case CommonFileDialogResult.Ok:
-                    FileName = Dialog.FileName;
-                    return true;
-            }
-
-            return false;
-            */
         }
     }
 }
