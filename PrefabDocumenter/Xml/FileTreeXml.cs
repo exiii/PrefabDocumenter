@@ -57,9 +57,6 @@ namespace PrefabDocumenter.Xml
 
                             return elementName == fileName;
                         }).First();
-
-                        Console.WriteLine(beforeElement.Attribute(XmlTags.FileNameAttr).Value);
-                        Console.WriteLine("---------------------------");
                     }
                 }
             }));
