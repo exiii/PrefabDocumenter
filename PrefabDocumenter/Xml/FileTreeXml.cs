@@ -30,6 +30,8 @@ namespace PrefabDocumenter.Xml
                     var beforeElement = metaFileTreeXml;
                     foreach (var fileName in Regex.Split(relativePath, RegexTokens.PathSplit))
                     {
+                        //TODO
+                        //パスが""/aaa/bb/..."となっているので"/aaa/"の左側の部分が判定対象になっているため、殻の文字で来る。
                         if (fileName == "") 
                         {
                             continue;

@@ -11,6 +11,7 @@ namespace PrefabDocumenter.Db
 {
     class PrefabDocumentModel : IModel
     {
+        //[TODO] XmlTagsの名前に合わせる
         public const string CreateTableCommand = "CREATE TABLE IF NOT EXISTS Document(" +
                                                   "guid TEXT PRIMARY KEY NOT NULL, " +
                                                   "filename TEXT NOT NULL, " +
@@ -28,6 +29,8 @@ namespace PrefabDocumenter.Db
                        $@"VALUES('{Guid}', '{@FileName}', '{@FilePath}', {IndentLevel}, '{@Description}');";
             }
         }
+        
+        public const string TableName = "Document";
 
         public string Guid { get; }
 
@@ -39,7 +42,6 @@ namespace PrefabDocumenter.Db
 
         public int IndentLevel { get; }
 
-        public const string TableName = "Document";
 
         public PrefabDocumentModel(string Guid, string FileName, string FilePath, string Description, int IndentLevel)
         {
