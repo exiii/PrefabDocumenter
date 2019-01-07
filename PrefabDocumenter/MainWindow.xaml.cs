@@ -198,7 +198,7 @@ namespace PrefabDocumenter
                 return;
             }
 
-            var pathOption = Optional.Return(FileDialog.Open(new CommonSaveFileDialog(), xmlCommonFilter));
+            var pathOption = Optional.Return(FileDialog.Open(new CommonSaveFileDialog(), dbCommonFilter));
 
             pathOption.Match(async value => {
                 var sqlProvider = new SqlDbProvider<PrefabDocumentModel>(value);
