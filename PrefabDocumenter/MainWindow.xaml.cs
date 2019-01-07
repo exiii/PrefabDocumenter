@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using PrefabDocumenter.Xml;
 using PrefabDocumenter.Db;
+using CenterCLR;
 
 namespace PrefabDocumenter
 {
@@ -33,8 +34,11 @@ namespace PrefabDocumenter
         //<-MainWindow.xaml call functions
         private void TargetFolderPathInject(object sender, RoutedEventArgs e)
         {
-            FileDialog.Open(new CommonOpenFileDialog(Properties.Resources.SaveFolderSelectDialogTitle) { IsFolderPicker = true }, out var path);
-            TargetFolderPath.Text = path;
+            var pathOption = Optional.Return(FileDialog.Open(new CommonOpenFileDialog(Properties.Resources.SaveFolderSelectDialogTitle) { IsFolderPicker = true }));
+
+            pathOption.Match(
+                value => TargetFolderPath.Text = value, 
+                () => TargetFolderPath.Text = "");
         }
 
         private async void CreateTreeFile(object sender, RoutedEventArgs e)
@@ -45,75 +49,77 @@ namespace PrefabDocumenter
                 return;
             }
 
-            var result = FileDialog.Open(new CommonSaveFileDialog(), out var path, xmlCommonFilter);
-            if (!result)
-            {
-                return;
-            }
+            var pathOption = Optional.Return(FileDialog.Open(new CommonSaveFileDialog(), xmlCommonFilter));
 
-            using (var fs = new FileStream(path, FileMode.Create))
-            {
-                ToggleAllButtonEnabled(false);
+            pathOption.Match(async value => {
+                using (var fs = new FileStream(value, FileMode.Create))
+                {
+                    ToggleAllButtonEnabled(false);
 
-                var xDoc = await FileTreeXml.CreateXElement(TargetFolderPath.Text, FileNameRegex.Text);
+                    var xDoc = await FileTreeXml.CreateXElement(TargetFolderPath.Text, FileNameRegex.Text);
 
-                await Task.Run(() => {
-                    xDoc.Save(fs);
-                });
+                    await Task.Run(() => {
+                        xDoc.Save(fs);
+                    });
 
-                fs.Close();
-                fs.Dispose();
+                    fs.Close();
+                    fs.Dispose();
 
-                UpdateMetaFileTree(xDoc);
-                ToggleAllButtonEnabled(true);
-            }
+                    UpdateMetaFileTree(xDoc);
+                    ToggleAllButtonEnabled(true);
+                }
+            }, 
+            () => { });
+
+
         }
 
         private async void LoadXmlFile(object sender, RoutedEventArgs e)
         {
+            var pathOption = Optional.Return(FileDialog.Open(new CommonOpenFileDialog(), xmlCommonFilter));
 
-            var result = FileDialog.Open(new CommonOpenFileDialog(), out var path, xmlCommonFilter);
-            if (!result)
-            {
-                return;
-            }
+            pathOption.Match(async value => {
+                if (!File.Exists(value))
+                {
+                    MessageBox.Show(Properties.Resources.IncorrectPath, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
 
-            if (!File.Exists(path))
-            {
-                MessageBox.Show(Properties.Resources.IncorrectPath, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
+                ToggleAllButtonEnabled(false);
 
-            ToggleAllButtonEnabled(false);
+                var xDoc = new XDocument();
+                await Task.Run(() => {
+                    xDoc = XDocument.Load(value);
+                });
 
-            var xDoc = new XDocument();
-            await Task.Run(() => {
-                xDoc = XDocument.Load(path);
-            });
+                UpdateMetaFileTree(xDoc);
 
-            UpdateMetaFileTree(xDoc);
+                ToggleAllButtonEnabled(true);
+            }, () => { });
 
-            ToggleAllButtonEnabled(true);
+
         }
 
         private async void LoadDraftDocument(object sender, RoutedEventArgs e)
         {
-            var result = FileDialog.Open(new CommonOpenFileDialog(), out var path, xmlCommonFilter);
-            if (!result)
+            var pathOption = Optional.Return(FileDialog.Open(new CommonOpenFileDialog(), xmlCommonFilter));
+
+            pathOption.Match(async value =>
             {
-                return;
-            }
+                ToggleAllButtonEnabled(false);
 
-            ToggleAllButtonEnabled(false);
+                var xDoc = new XDocument();
+                await Task.Run(() =>
+                {
+                    xDoc = XDocument.Load(value);
+                });
 
-            var xDoc = new XDocument();
-            await Task.Run(() => {
-                xDoc = XDocument.Load(path); ;
-            });
+                UpdateDraftDocTree(xDoc);
 
-            UpdateDraftDocTree(xDoc);
+                ToggleAllButtonEnabled(true);
+            }, 
+            () => { });
 
-            ToggleAllButtonEnabled(true);
         }
 
         private async void CreateDraftDocument(object sender, RoutedEventArgs e)
@@ -124,29 +130,30 @@ namespace PrefabDocumenter
                 return;
             }
 
-            var result = FileDialog.Open(new CommonSaveFileDialog(), out var path, xmlCommonFilter);
-            if (!result)
-            {
-                return;
-            }
+            var pathOption = Optional.Return(FileDialog.Open(new CommonSaveFileDialog(), xmlCommonFilter));
 
-            using (var fs = new FileStream(path, FileMode.Create))
-            {
-                ToggleAllButtonEnabled(false);
+            pathOption.Match(async value => {
+                using (var fs = new FileStream(value, FileMode.Create))
+                {
+                    ToggleAllButtonEnabled(false);
 
-                var xDoc = await XmlDocument.CreateDraftDocument(loadFileTreeRootElement.DescendantsAndSelf().Where(element => element.Attribute(XmlTags.GuidAttr) != null));
+                    var xDoc = await XmlDocument.CreateDraftDocument(loadFileTreeRootElement.DescendantsAndSelf().Where(element => element.Attribute(XmlTags.GuidAttr) != null));
 
-                await Task.Run(() => {
-                    xDoc.Save(fs);
-                });
+                    await Task.Run(() => {
+                        xDoc.Save(fs);
+                    });
 
-                fs.Close();
-                fs.Dispose();
+                    fs.Close();
+                    fs.Dispose();
 
-                UpdateDraftDocTree(xDoc);
+                    UpdateDraftDocTree(xDoc);
 
-                ToggleAllButtonEnabled(true);
-            }
+                    ToggleAllButtonEnabled(true);
+                }
+            },
+            () => { });
+
+
         }
 
         private async void UpdateDraftDocument(object sender, RoutedEventArgs e)
@@ -157,34 +164,33 @@ namespace PrefabDocumenter
                 return;
             }
 
-            var result = FileDialog.Open(new CommonOpenFileDialog(), out var path, xmlCommonFilter);
-            if (!result)
-            {
-                return;
-            }
+            var pathOption = Optional.Return(FileDialog.Open(new CommonOpenFileDialog(), xmlCommonFilter));
 
-            ToggleAllButtonEnabled(false);
+            pathOption.Match(async value => {
+                ToggleAllButtonEnabled(false);
 
-            var xDoc = new XDocument();
-            await Task.Run(() => {
-                xDoc = XDocument.Load(path);
-            });
-
-            xDoc = await XmlDocument.UpdateDraftDocument(loadFileTreeRootElement.Elements(), xDoc.Elements());
-
-            using (var fs = new FileStream(path, FileMode.Create))
-            {
+                var xDoc = new XDocument();
                 await Task.Run(() => {
-                    xDoc.Save(fs);
+                    xDoc = XDocument.Load(value);
                 });
 
-                fs.Close();
-                fs.Dispose();
-            }
+                xDoc = await XmlDocument.UpdateDraftDocument(loadFileTreeRootElement.Elements(), xDoc.Elements());
 
-            UpdateDraftDocTree(xDoc);
+                using (var fs = new FileStream(value, FileMode.Create))
+                {
+                    await Task.Run(() => {
+                        xDoc.Save(fs);
+                    });
 
-            ToggleAllButtonEnabled(true);
+                    fs.Close();
+                    fs.Dispose();
+                }
+
+                UpdateDraftDocTree(xDoc);
+
+                ToggleAllButtonEnabled(true);
+            },
+            () => { });
         }
 
         private async void CreateDbDocument(object sender, RoutedEventArgs e)
@@ -195,19 +201,18 @@ namespace PrefabDocumenter
                 return;
             }
 
-            var result = FileDialog.Open(new CommonSaveFileDialog(), out var path, dbCommonFilter);
-            if (!result)
-            {
-                return;
-            }
+            var pathOption = Optional.Return(FileDialog.Open(new CommonSaveFileDialog(), xmlCommonFilter));
 
-            var sqlProvider = new SqlDbProvider<PrefabDocumentModel>(path);
+            pathOption.Match(async value => {
+                var sqlProvider = new SqlDbProvider<PrefabDocumentModel>(value);
 
-            var models = await PrefabDocumentModel.CreateXmlToModel(loadDraftDocRootElement, loadFileTreeRootElement);
+                var models = await PrefabDocumentModel.CreateXmlToModel(loadDraftDocRootElement, loadFileTreeRootElement);
 
-            sqlProvider.InitTable();
+                sqlProvider.InitTable();
 
-            sqlProvider.Inserts(models);
+                sqlProvider.Inserts(models);
+            },
+            () => { });
         }
 
         private void UpdateMetaFileTree(XDocument xDoc)
@@ -237,7 +242,7 @@ namespace PrefabDocumenter
 
     internal static class FileDialog
     {
-        internal static bool Open(CommonFileDialog Dialog, out string FileName, CommonFileDialogFilter Filter = null)
+        internal static string Open(CommonFileDialog Dialog, CommonFileDialogFilter Filter = null)
         {
             if(Filter != null)
             {
@@ -248,6 +253,9 @@ namespace PrefabDocumenter
 
             var result = Dialog.ShowDialog();
 
+            return Dialog.FileName;
+
+            /*
             switch (result)
             {
                 case CommonFileDialogResult.Ok:
@@ -255,8 +263,8 @@ namespace PrefabDocumenter
                     return true;
             }
 
-            FileName = "";
             return false;
+            */
         }
     }
 }
