@@ -97,6 +97,15 @@ namespace PrefabDocumenter.Properties {
         }
         
         /// <summary>
+        ///   Draft documentを読み込んでください。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string DraftXMLNotLoaded {
+            get {
+                return ResourceManager.GetString("DraftXMLNotLoaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   エラー に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Error {

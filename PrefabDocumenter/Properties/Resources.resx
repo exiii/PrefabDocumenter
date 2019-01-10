@@ -129,6 +129,9 @@
   <data name="DraftDocumentTreeViewLabel" xml:space="preserve">
     <value>Draft document tree view</value>
   </data>
+  <data name="DraftXMLNotLoaded" xml:space="preserve">
+    <value>Draft documentを読み込んでください。</value>
+  </data>
   <data name="Error" xml:space="preserve">
     <value>エラー</value>
   </data>

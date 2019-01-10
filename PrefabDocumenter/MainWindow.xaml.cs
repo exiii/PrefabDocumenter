@@ -23,8 +23,8 @@ namespace PrefabDocumenter
         private CommonFileDialogFilter htmlCommonFilter = new CommonFileDialogFilter("HTML", "html");
         private CommonFileDialogFilter dbCommonFilter = new CommonFileDialogFilter("DB", "db");
 
-        private XElement loadFileTreeRootElement;
-        private XElement loadDraftDocRootElement;
+        private Optional<XElement> fileTreeRootElementOption;
+        private Optional<XElement> draftDocRootElementOption;
 
         public MainWindow()
         {
@@ -121,109 +121,109 @@ namespace PrefabDocumenter
 
         private async void CreateDraftDocument(object sender, RoutedEventArgs e)
         {
-            if (loadFileTreeRootElement == null)
-            {
-                MessageBox.Show(Properties.Resources.FileTreeXMLNotLoaded, Properties.Resources.Error, MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
+            fileTreeRootElementOption.Match(async fileTreeRootElement => {
+                var pathOption = Optional.Return(FileDialog.Open(new CommonSaveFileDialog(), xmlCommonFilter));
 
-            var pathOption = Optional.Return(FileDialog.Open(new CommonSaveFileDialog(), xmlCommonFilter));
+                pathOption.Match(async path => {
+                    using (var fs = new FileStream(path, FileMode.Create))
+                    {
+                        ToggleAllButtonEnabled(false);
 
-            pathOption.Match(async value => {
-                using (var fs = new FileStream(value, FileMode.Create))
-                {
-                    ToggleAllButtonEnabled(false);
+                        var xDoc = await XmlDocument.CreateDraftDocument(fileTreeRootElement.DescendantsAndSelf().Where(element => element.Attribute(XmlTags.GuidAttr) != null));
 
-                    var xDoc = await XmlDocument.CreateDraftDocument(loadFileTreeRootElement.DescendantsAndSelf().Where(element => element.Attribute(XmlTags.GuidAttr) != null));
+                        await Task.Run(() => {
+                            xDoc.Save(fs);
+                        });
 
-                    await Task.Run(() => {
-                        xDoc.Save(fs);
-                    });
+                        fs.Close();
+                        fs.Dispose();
 
-                    fs.Close();
-                    fs.Dispose();
+                        UpdateDraftDocTree(xDoc);
 
-                    UpdateDraftDocTree(xDoc);
-
-                    ToggleAllButtonEnabled(true);
-                }
+                        ToggleAllButtonEnabled(true);
+                    }
+                },
+                () => { });
             },
-            () => { });
-
-
+            () => {
+                MessageBox.Show(Properties.Resources.FileTreeXMLNotLoaded, Properties.Resources.Error, MessageBoxButton.OK, MessageBoxImage.Error);
+            });
         }
 
         private async void UpdateDraftDocument(object sender, RoutedEventArgs e)
         {
-            if (loadFileTreeRootElement == null)
-            {
-                MessageBox.Show(Properties.Resources.FileTreeXMLNotLoaded, Properties.Resources.Error, MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
+            fileTreeRootElementOption.Match(async fileTreeRootElement => {
+                var pathOption = Optional.Return(FileDialog.Open(new CommonOpenFileDialog(), xmlCommonFilter));
 
-            var pathOption = Optional.Return(FileDialog.Open(new CommonOpenFileDialog(), xmlCommonFilter));
+                pathOption.Match(async value => {
+                    ToggleAllButtonEnabled(false);
 
-            pathOption.Match(async value => {
-                ToggleAllButtonEnabled(false);
-
-                var xDoc = new XDocument();
-                await Task.Run(() => {
-                    xDoc = XDocument.Load(value);
-                });
-
-                xDoc = await XmlDocument.UpdateDraftDocument(loadFileTreeRootElement.Elements(), xDoc.Elements());
-
-                using (var fs = new FileStream(value, FileMode.Create))
-                {
+                    var xDoc = new XDocument();
                     await Task.Run(() => {
-                        xDoc.Save(fs);
+                        xDoc = XDocument.Load(value);
                     });
 
-                    fs.Close();
-                    fs.Dispose();
-                }
+                    xDoc = await XmlDocument.UpdateDraftDocument(fileTreeRootElement.Elements(), xDoc.Elements());
 
-                UpdateDraftDocTree(xDoc);
+                    using (var fs = new FileStream(value, FileMode.Create))
+                    {
+                        await Task.Run(() => {
+                            xDoc.Save(fs);
+                        });
 
-                ToggleAllButtonEnabled(true);
+                        fs.Close();
+                        fs.Dispose();
+                    }
+
+                    UpdateDraftDocTree(xDoc);
+
+                    ToggleAllButtonEnabled(true);
+                },
+                () => { });
             },
-            () => { });
+            () => {
+                MessageBox.Show(Properties.Resources.FileTreeXMLNotLoaded, Properties.Resources.Error, MessageBoxButton.OK, MessageBoxImage.Error);
+            });
         }
 
         private async void CreateDbDocument(object sender, RoutedEventArgs e)
         {
-            if (loadDraftDocRootElement == null || loadFileTreeRootElement == null)
-            {
-                MessageBox.Show(Properties.Resources.FileTreeAndDraftNotLoaded, Properties.Resources.Error, MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
+            draftDocRootElementOption.Match(async draftDocRootElement => {
+                fileTreeRootElementOption.Match(async fileTreeRootElement => {
+                    var pathOption = Optional.Return(FileDialog.Open(new CommonSaveFileDialog(), dbCommonFilter));
 
-            var pathOption = Optional.Return(FileDialog.Open(new CommonSaveFileDialog(), dbCommonFilter));
+                    pathOption.Match(async value => {
+                        var sqlProvider = new SqlDbProvider<PrefabDocumentModel>(value);
 
-            pathOption.Match(async value => {
-                var sqlProvider = new SqlDbProvider<PrefabDocumentModel>(value);
+                        var models = await PrefabDocumentModel.CreateXmlToModel(draftDocRootElement, fileTreeRootElement);
 
-                var models = await PrefabDocumentModel.CreateXmlToModel(loadDraftDocRootElement, loadFileTreeRootElement);
+                        sqlProvider.InitTable();
 
-                sqlProvider.InitTable();
-
-                sqlProvider.Inserts(models);
+                        sqlProvider.Inserts(models);
+                    },
+                    () => { });
+                },
+                () => {
+                    MessageBox.Show(Properties.Resources.FileTreeXMLNotLoaded, Properties.Resources.Error, MessageBoxButton.OK, MessageBoxImage.Error);
+                });
             },
-            () => { });
+            () => {
+                MessageBox.Show(Properties.Resources.DraftXMLNotLoaded, Properties.Resources.Error, MessageBoxButton.OK, MessageBoxImage.Error);
+            });
         }
 
         private void UpdateMetaFileTree(XDocument xDoc)
         {
             metaFileTree.Items.Refresh();
             metaFileTree.ItemsSource = xDoc.Root.Elements();
-            loadFileTreeRootElement = xDoc.Root;
+            fileTreeRootElementOption = Optional.Return(xDoc.Root);
         }
 
         private void UpdateDraftDocTree(XDocument xDoc)
         {
             draftTreeView.Items.Refresh();
             draftTreeView.ItemsSource = xDoc.Root.Elements();
-            loadDraftDocRootElement = xDoc.Root;
+            draftDocRootElementOption = Optional.Return(xDoc.Root);
         }
 
         private void ToggleAllButtonEnabled(bool isEnabled)
