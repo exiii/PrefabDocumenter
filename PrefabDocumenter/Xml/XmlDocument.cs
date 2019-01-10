@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PrefabDocumenter.RegexExtension;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,7 +25,7 @@ namespace PrefabDocumenter.Xml
                 foreach (var element in MetaFileElement)
                 {
                     draftDocument.Add(new XElement(XmlTags.MetaFileTag,
-                        new XAttribute(XmlTags.FileNameAttr, Regex.Split(element.Attribute(XmlTags.FilePathAttr).Value.ToString(), @"\\").Last()),
+                        new XAttribute(XmlTags.FileNameAttr, element.Attribute(XmlTags.FileNameAttr).Value),
                         new XAttribute(XmlTags.GuidAttr, element.Attribute(XmlTags.GuidAttr).Value),
                         new XElement(XmlTags.DescriptionTag)));
                 }
@@ -59,7 +60,7 @@ namespace PrefabDocumenter.Xml
                         if (!Exist) 
                         {
                             newDraftDocument.Add(new XElement(XmlTags.MetaFileTag,
-                                        new XAttribute(XmlTags.FileNameAttr, Regex.Split(metaElement.Attribute(XmlTags.FilePathAttr).Value.ToString(), @"\\").Last()),
+                                        new XAttribute(XmlTags.FileNameAttr, Regex.Split(metaElement.Attribute(XmlTags.FilePathAttr).Value.ToString(), RegexTokens.PathSplit).Last()),
                                         new XAttribute(XmlTags.GuidAttr, metaElement.Attribute(XmlTags.GuidAttr).Value),
                                         new XElement(XmlTags.DescriptionTag)));
                         }

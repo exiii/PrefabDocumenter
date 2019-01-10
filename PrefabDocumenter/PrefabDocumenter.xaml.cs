@@ -214,15 +214,15 @@ namespace PrefabDocumenter
 
         private void UpdateMetaFileTree(XDocument xDoc)
         {
-            metaFileTree.Items.Refresh();
-            metaFileTree.ItemsSource = xDoc.Root.Elements();
+            MetaFileTree.Items.Refresh();
+            MetaFileTree.ItemsSource = xDoc.Root.Elements();
             fileTreeRootElementOption = Optional.Return(xDoc.Root);
         }
 
         private void UpdateDraftDocTree(XDocument xDoc)
         {
-            draftTreeView.Items.Refresh();
-            draftTreeView.ItemsSource = xDoc.Root.Elements();
+            DraftTreeView.Items.Refresh();
+            DraftTreeView.ItemsSource = xDoc.Root.Elements();
             draftDocRootElementOption = Optional.Return(xDoc.Root);
         }
 

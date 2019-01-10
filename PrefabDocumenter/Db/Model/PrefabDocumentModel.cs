@@ -6,12 +6,12 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using PrefabDocumenter.Xml;
+using PrefabDocumenter.RegexExtension;
 
 namespace PrefabDocumenter.Db
 {
     class PrefabDocumentModel : IModel
     {
-        //[TODO] XmlTagsの名前に合わせる
         public const string CreateTableCommand = "CREATE TABLE IF NOT EXISTS Document(" +
                                                   "guid TEXT PRIMARY KEY NOT NULL, " +
                                                   "filename TEXT NOT NULL, " +
@@ -92,8 +92,8 @@ namespace PrefabDocumenter.Db
                                         .ToList()
                                         .ForEach(element => {
                                             string guid = element.Attribute(XmlTags.GuidAttr).Value;
-                                            string fileName = Regex.Replace(descriptionElement.Attribute(XmlTags.FileNameAttr).Value, ".meta$", "");
-                                            string filePath = Regex.Replace(element.Attribute(XmlTags.FilePathAttr).Value, ".meta$", ""); ;
+                                            string fileName = descriptionElement.Attribute(XmlTags.FileNameAttr).Value;
+                                            string filePath = Regex.Replace(element.Attribute(XmlTags.FilePathAttr).Value, RegexTokens.MetaFileExtension, "");
                                             string description = descriptionElement.Descendants(XmlTags.DescriptionTag).First().Value;
                                             int indentLevel = element.Ancestors().Count() - 2;
 

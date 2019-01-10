@@ -84,7 +84,7 @@
     <Compile Include="RegexExtension\ConstantClass\RegexTokens.cs" />
     <Compile Include="Xml\XmlDocument.cs" />
     <Compile Include="Xml\ConstantClass\XmlTags.cs" />
-    <Page Include="MainWindow.xaml">
+    <Page Include="PrefabDocumenter.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -92,8 +92,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
+    <Compile Include="PrefabDocumenter.xaml.cs">
+      <DependentUpon>PrefabDocumenter.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
