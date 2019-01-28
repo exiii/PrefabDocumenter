@@ -91,11 +91,11 @@ namespace PrefabDocumenter.Db
                                         .Where(metaElement => metaElement.Attribute(XmlTags.GuidAttr).Value == descriptionElement.Attribute(XmlTags.GuidAttr).Value)
                                         .ToList()
                                         .ForEach(element => {
-                                            string guid = element.Attribute(XmlTags.GuidAttr).Value;
-                                            string fileName = descriptionElement.Attribute(XmlTags.FileNameAttr).Value;
-                                            string filePath = Regex.Replace(element.Attribute(XmlTags.FilePathAttr).Value, RegexTokens.MetaFileExtension, "");
-                                            string description = descriptionElement.Descendants(XmlTags.DescriptionTag).First().Value;
-                                            int indentLevel = element.Ancestors().Count() - 2;
+                                            var guid = element.Attribute(XmlTags.GuidAttr).Value;
+                                            var fileName = descriptionElement.Attribute(XmlTags.FileNameAttr).Value;
+                                            var filePath = Regex.Replace(element.Attribute(XmlTags.FilePathAttr).Value, RegexTokens.MetaFileExtension, "");
+                                            var description = descriptionElement.Descendants(XmlTags.DescriptionTag).First().Value;
+                                            var indentLevel = element.Ancestors().Count() - 2;
 
                                             documentModels.Add(new PrefabDocumentModel(guid, fileName, filePath, description, indentLevel));
                                         });
