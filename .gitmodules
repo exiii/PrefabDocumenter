@@ -1,6 +1,3 @@
-[submodule "prefabDocumenterPage"]
-	path = prefabDocumenterPage
-	url = git@github.com:exiii/PrefabDocumenterPage.git
 [submodule "PrefabDocumenter/CSharpMonadic"]
 	path = PrefabDocumenter/CSharpMonadic
 	url = git@github.com:kekyo/CSharpMonadic.git
