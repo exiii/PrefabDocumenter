@@ -54,9 +54,11 @@ namespace PrefabDocumenter.Xml
                                             .ForEach(draftElement => newDraftDocument.Add(draftElement));
 
                         var Exist = DraftDocumentElement.DescendantsAndSelf()
-                                                        .Where(draftElement => draftElement.Attribute(XmlTags.GuidAttr) != null)
-                                                        .Where(draftElement => draftElement.Attribute(XmlTags.GuidAttr).Value == metaElement.Attribute(XmlTags.GuidAttr).Value)
-                                                        .Any();
+                            .Where(draftElement => draftElement.Attribute(XmlTags.GuidAttr) != null)
+                            .Any(draftElement =>
+                                draftElement.Attribute(XmlTags.GuidAttr).Value ==
+                                metaElement.Attribute(XmlTags.GuidAttr).Value);
+                        
                         if (!Exist) 
                         {
                             newDraftDocument.Add(new XElement(XmlTags.MetaFileTag,
