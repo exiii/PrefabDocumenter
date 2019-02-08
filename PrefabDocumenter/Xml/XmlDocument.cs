@@ -25,8 +25,8 @@ namespace PrefabDocumenter.Xml
                 foreach (var element in MetaFileElement)
                 {
                     draftDocument.Add(new XElement(XmlTags.MetaFileTag,
-                        new XAttribute(XmlTags.FileNameAttr, element.Attribute(XmlTags.FileNameAttr).Value),
-                        new XAttribute(XmlTags.GuidAttr, element.Attribute(XmlTags.GuidAttr).Value),
+                        new XAttribute(XmlTags.FileNameAttr, string.Intern(element.Attribute(XmlTags.FileNameAttr).Value)),
+                        new XAttribute(XmlTags.GuidAttr, string.Intern(element.Attribute(XmlTags.GuidAttr).Value)),
                         new XElement(XmlTags.DescriptionTag)));
                 }
             });
@@ -49,21 +49,21 @@ namespace PrefabDocumenter.Xml
                     {
                         DraftDocumentElement.DescendantsAndSelf()
                                             .Where(draftElement => draftElement.Attribute(XmlTags.GuidAttr) != null)
-                                            .Where(draftElement => draftElement.Attribute(XmlTags.GuidAttr).Value == metaElement.Attribute(XmlTags.GuidAttr).Value)
+                                            .Where(draftElement => string.Intern(draftElement.Attribute(XmlTags.GuidAttr).Value) == string.Intern(metaElement.Attribute(XmlTags.GuidAttr).Value))
                                             .ToList()
                                             .ForEach(draftElement => newDraftDocument.Add(draftElement));
 
                         var Exist = DraftDocumentElement.DescendantsAndSelf()
                             .Where(draftElement => draftElement.Attribute(XmlTags.GuidAttr) != null)
                             .Any(draftElement =>
-                                draftElement.Attribute(XmlTags.GuidAttr).Value ==
-                                metaElement.Attribute(XmlTags.GuidAttr).Value);
+                                string.Intern(draftElement.Attribute(XmlTags.GuidAttr).Value) ==
+                                string.Intern(metaElement.Attribute(XmlTags.GuidAttr).Value));
                         
                         if (!Exist) 
                         {
                             newDraftDocument.Add(new XElement(XmlTags.MetaFileTag,
-                                        new XAttribute(XmlTags.FileNameAttr, Regex.Split(metaElement.Attribute(XmlTags.FilePathAttr).Value.ToString(), RegexTokens.PathSplit).Last()),
-                                        new XAttribute(XmlTags.GuidAttr, metaElement.Attribute(XmlTags.GuidAttr).Value),
+                                        new XAttribute(XmlTags.FileNameAttr, Regex.Split(String.Intern(metaElement.Attribute(XmlTags.FilePathAttr).Value), RegexTokens.PathSplit).Last()),
+                                        new XAttribute(XmlTags.GuidAttr, string.Intern(metaElement.Attribute(XmlTags.GuidAttr).Value)),
                                         new XElement(XmlTags.DescriptionTag)));
                         }
                     }

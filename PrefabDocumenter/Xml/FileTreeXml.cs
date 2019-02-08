@@ -37,13 +37,13 @@ namespace PrefabDocumenter.Xml
 
                         var fileName = Regex.Replace(metaFileName, RegexTokens.MetaFileExtension, "");
 
-                        if (beforeElement.DescendantsAndSelf().Attributes(XmlTags.FileNameAttr).Where(name => name.Value == fileName).Any() == false)
+                        if (beforeElement.DescendantsAndSelf().Attributes(XmlTags.FileNameAttr).Any(name => name.Value == fileName) == false)
                         {
 
                             beforeElement.Add(new XElement(XmlTags.FileTag,
                                 new XAttribute(XmlTags.FileNameAttr, fileName),
                                 Regex.IsMatch(metaFileName, RegexTokens.MetaFileExtension) ? new XAttribute(XmlTags.FilePathAttr, relativePath) : null,
-                                Regex.IsMatch(metaFileName, RegexTokens.MetaFileExtension) ? new XAttribute(XmlTags.GuidAttr, UnityMetaParser.Parse(new StreamReader(path).ReadToEnd()).Guid) : null,
+                                Regex.IsMatch(metaFileName, RegexTokens.MetaFileExtension) ? new XAttribute(XmlTags.GuidAttr, string.Intern(UnityMetaParser.Parse(new StreamReader(path).ReadToEnd()).Guid)) : null,
                                 Regex.IsMatch(metaFileName, RegexTokens.FileExtension) ? new XAttribute(XmlTags.TypeAttr, FileTypeValue.File) : new XAttribute(XmlTags.TypeAttr, FileTypeValue.Folder)
                                 ));
                         }
@@ -51,7 +51,7 @@ namespace PrefabDocumenter.Xml
                         beforeElement = beforeElement.Descendants()
                         .Where(element => 
                         {
-                            var elementName = element.Attribute(XmlTags.FileNameAttr).Value;
+                            var elementName = string.Intern(element.Attribute(XmlTags.FileNameAttr).Value);
 
                             return elementName == fileName;
                         }).First();

@@ -21,15 +21,9 @@ namespace PrefabDocumenter.Db
 
         public const string DropTableCommand = "DROP TABLE IF EXISTS Document;";
 
-        public string InsertCommand
-        {
-            get
-            {
-                return $@"INSERT INTO {TableName} " +
-                       $@"VALUES('{Guid}', '{@FileName}', '{@FilePath}', {IndentLevel}, '{@Description}');";
-            }
-        }
-        
+        public string InsertCommand =>
+            $@"INSERT INTO {TableName} VALUES('{Guid}', '{@FileName}', '{@FilePath}', {IndentLevel.ToString()}, '{@Description}');";
+
         public const string TableName = "Document";
 
         public string Guid { get; }
@@ -83,18 +77,18 @@ namespace PrefabDocumenter.Db
                 try {
                     var enableDrafts = DraftElements.DescendantsAndSelf(XmlTags.MetaFileTag)
                                                     .Where(element => element.Elements(XmlTags.MetaFileTag) != null)
-                                                    .Where(element => element.Descendants(XmlTags.DescriptionTag).First().Value != "");
+                                                    .Where(element => string.Intern(element.Descendants(XmlTags.DescriptionTag).First().Value) != "");
 
                     foreach (var descriptionElement in enableDrafts) {
                         MetaFileElements.DescendantsAndSelf()
                                         .Where(metaElement => metaElement.Attribute(XmlTags.GuidAttr) != null)
-                                        .Where(metaElement => metaElement.Attribute(XmlTags.GuidAttr).Value == descriptionElement.Attribute(XmlTags.GuidAttr).Value)
+                                        .Where(metaElement => string.Intern(metaElement.Attribute(XmlTags.GuidAttr).Value) == string.Intern(descriptionElement.Attribute(XmlTags.GuidAttr).Value))
                                         .ToList()
                                         .ForEach(element => {
-                                            var guid = element.Attribute(XmlTags.GuidAttr).Value;
-                                            var fileName = descriptionElement.Attribute(XmlTags.FileNameAttr).Value;
-                                            var filePath = Regex.Replace(element.Attribute(XmlTags.FilePathAttr).Value, RegexTokens.MetaFileExtension, "");
-                                            var description = descriptionElement.Descendants(XmlTags.DescriptionTag).First().Value;
+                                            var guid = string.Intern(element.Attribute(XmlTags.GuidAttr).Value);
+                                            var fileName = string.Intern(descriptionElement.Attribute(XmlTags.FileNameAttr).Value);
+                                            var filePath = string.Intern(Regex.Replace(element.Attribute(XmlTags.FilePathAttr).Value, RegexTokens.MetaFileExtension, ""));
+                                            var description = string.Intern(descriptionElement.Descendants(XmlTags.DescriptionTag).First().Value);
                                             var indentLevel = element.Ancestors().Count() - 2;
 
                                             documentModels.Add(new PrefabDocumentModel(guid, fileName, filePath, description, indentLevel));

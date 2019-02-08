@@ -20,7 +20,6 @@ namespace PrefabDocumenter
     public partial class MainWindow : Window
     {
         private CommonFileDialogFilter xmlCommonFilter = new CommonFileDialogFilter("XML", "xml");
-        private CommonFileDialogFilter htmlCommonFilter = new CommonFileDialogFilter("HTML", "html");
         private CommonFileDialogFilter dbCommonFilter = new CommonFileDialogFilter("DB", "db");
 
         private Optional<XElement> fileTreeRootElementOption;
