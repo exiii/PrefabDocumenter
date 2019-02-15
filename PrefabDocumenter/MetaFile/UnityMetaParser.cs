@@ -28,13 +28,13 @@ namespace PrefabDocumenter.MetaFile
             var folderAssetGetResult = mapping.Children.TryGetValue(new YamlScalarNode(UnityMetaKey.FolderAsset), out var folderAssetNode);
 
             var fileFormatVerValue = fileFormatVerGetResult ?
-                ((YamlScalarNode)fileFormatVerNode).Value :
+                string.Intern(((YamlScalarNode)fileFormatVerNode).Value) :
                 "";
 
-            var guidValue = ((YamlScalarNode)guidNode).Value;
+            var guidValue = string.Intern(((YamlScalarNode)guidNode).Value);
 
             var folderAssetValue = folderAssetGetResult ?
-                ((YamlScalarNode)folderAssetNode).Value :
+                string.Intern(((YamlScalarNode)folderAssetNode).Value) :
                 "";
 
             return new UnityMeta(fileFormatVerValue, guidValue, folderAssetValue);

@@ -72,6 +72,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Db\Model\ConstantClass\DocumentColomnName.cs" />
     <Compile Include="Db\Model\PrefabDocumentModel.cs" />
     <Compile Include="Db\Model\Interface\IModel.cs" />
     <Compile Include="Db\SqlDbProvider.cs" />
