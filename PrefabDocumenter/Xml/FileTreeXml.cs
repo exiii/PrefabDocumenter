@@ -40,7 +40,7 @@ namespace PrefabDocumenter.Xml
                         if (beforeElement.DescendantsAndSelf().Attributes(XmlTags.FileNameAttr).Any(name => name.Value == fileName) == false)
                         {
 
-                            beforeElement.Add(new XElement(XmlTags.FileTag,
+                            beforeElement.Add(new XElement(XmlTags.MetaFileTag,
                                 new XAttribute(XmlTags.FileNameAttr, fileName),
                                 Regex.IsMatch(metaFileName, RegexTokens.MetaFileExtension) ? new XAttribute(XmlTags.FilePathAttr, relativePath) : null,
                                 Regex.IsMatch(metaFileName, RegexTokens.MetaFileExtension) ? new XAttribute(XmlTags.GuidAttr, string.Intern(UnityMetaParser.Parse(new StreamReader(path).ReadToEnd()).Guid)) : null,
