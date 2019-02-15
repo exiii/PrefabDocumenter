@@ -10,7 +10,7 @@ namespace PrefabDocumenter.MetaFile
 {
     public class FileSearcher
     {
-        public string TargetFileExtension { get; private set; }
+        public string TargetFileExtension { get; }
 
         public FileSearcher(string TargetFileExtension) 
         {

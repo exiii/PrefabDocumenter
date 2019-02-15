@@ -8,9 +8,9 @@ namespace PrefabDocumenter.MetaFile
 {
     public class UnityMeta
     {
-        public string FileFormatVersion { private set; get; }
-        public string Guid { private set; get; }
-        public string FolderAsset { private set; get; }
+        public string FileFormatVersion { get; }
+        public string Guid { get; }
+        public string FolderAsset { get; }
 
         public UnityMeta(string FileFormatVersion, string Guid, string FolderAsset)
         {

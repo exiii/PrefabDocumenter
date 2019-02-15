@@ -19,8 +19,8 @@ namespace PrefabDocumenter
     /// </summary>
     public partial class MainWindow : Window
     {
-        private CommonFileDialogFilter xmlCommonFilter = new CommonFileDialogFilter("XML", "xml");
-        private CommonFileDialogFilter dbCommonFilter = new CommonFileDialogFilter("DB", "db");
+        private readonly CommonFileDialogFilter xmlCommonFilter = new CommonFileDialogFilter("XML", "xml");
+        private readonly CommonFileDialogFilter dbCommonFilter = new CommonFileDialogFilter("DB", "db");
 
         private Optional<XElement> fileTreeRootElementOption;
         private Optional<XElement> draftDocRootElementOption;
@@ -243,7 +243,6 @@ namespace PrefabDocumenter
             if(Filter != null)
             {
                 Dialog.Filters.Add(Filter);
-                //Dialog.AlwaysAppendDefaultExtension = true;
                 Dialog.DefaultExtension = Filter.Extensions.First();
             }
 
@@ -255,7 +254,7 @@ namespace PrefabDocumenter
                     return Dialog.FileName;
             }
 
-            return null;
+            return string.Empty;
         }
     }
 }

@@ -12,12 +12,12 @@ namespace PrefabDocumenter.Db
 {
     class PrefabDocumentModel : IModel
     {
-        public const string CreateTableCommand = "CREATE TABLE IF NOT EXISTS Document(" +
-                                                  "guid TEXT PRIMARY KEY NOT NULL, " +
-                                                  "filename TEXT NOT NULL, " +
-                                                  "filepath TEXT NOT NULL, " +
-                                                  "indentLevel INT NOT NULL," +
-                                                  "description TEXT);";
+        public static readonly string CreateTableCommand = "CREATE TABLE IF NOT EXISTS Document(" +
+                                                           $@"{DocumentColomnName.Guid} TEXT PRIMARY KEY NOT NULL, " +
+                                                           $@"{DocumentColomnName.FileName} TEXT NOT NULL, " +
+                                                           $@"{DocumentColomnName.FilePath} TEXT NOT NULL, " +
+                                                           $@"{DocumentColomnName.IndentLevel} INT NOT NULL," +
+                                                           $@"{DocumentColomnName.Description} TEXT);";
 
         public const string DropTableCommand = "DROP TABLE IF EXISTS Document;";
 
